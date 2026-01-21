@@ -61,19 +61,27 @@ st.markdown("""
     }
     
     /* Individual input styling */
-    .stTextInput > div > div > input {
-        background: #F7FAFC;
-        border: 1px solid #E2E8F0;
-        border-radius: 8px;
-        padding: 12px 16px;
-        font-weight: 500;
-        transition: all 0.2s ease;
-    }
-    
+.stTextInput > div > div > input {
+    background-color: #F7FAFC;       /* Light background */
+    color: #1F2937;                  /* Dark text for visibility */
+    border: 1px solid #E2E8F0;
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.stTextInput > div > div > input:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+@media (prefers-color-scheme: dark) {
     .stTextInput > div > div > input:focus {
-        border-color: #667eea;
-        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        background-color: #1F2937;  /* dark input background */
+        color: #F7FAFC;             /* light text */
+        border: 1px solid #374151;  /* darker border */
     }
+}
     
     /* Result card styling */
     .result-card {
