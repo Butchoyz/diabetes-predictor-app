@@ -1,4 +1,3 @@
-
 import streamlit as st
 import pandas as pd
 import joblib
@@ -15,7 +14,7 @@ st.set_page_config(
 )
 
 # ============================================
-# MODERN CUSTOM CSS
+# MODERN CUSTOM CSS (COMPLETE)
 # ============================================
 st.markdown("""
     <style>
@@ -45,106 +44,25 @@ st.markdown("""
         font-weight: 400;
     }
     
-    /* Input fields container */
-    .input-container {
-        background: #ffffff;
-        padding: 2.2rem;
-        border-radius: 16px;
-        margin-bottom: 1.8rem;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
-        border: 1px solid #E2E8F0;
-        transition: all 0.2s ease;
+    /* Expander styling */
+    .stExpander {
+        background: #F8FAFC;
+        border-radius: 12px;
+        margin-bottom: 2rem;
     }
-    
-    .input-container:hover {
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-    }
-    
-    /* Individual input styling */
-.stTextInput > div > div > input {
-    background-color: #F7FAFC;       /* Light background */
-    color: #1F2937;                  /* Dark text for visibility */
-    border: 1px solid #E2E8F0;
-    border-radius: 8px;
-    padding: 12px 16px;
-    font-weight: 500;
-    transition: all 0.2s ease;
-}
-
-.stTextInput > div > div > input:focus {
-    border-color: #667eea;
-    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-}
-@media (prefers-color-scheme: dark) {
-    .stTextInput > div > div > input:focus {
-        background-color: #1F2937;  /* dark input background */
-        color: #F7FAFC;             /* light text */
-        border: 1px solid #374151;  /* darker border */
-    }
-}
-    
-    /* Result card styling */
-    .result-card {
-        padding: 3rem 2rem;
-        border-radius: 16px;
-        margin: 2.5rem 0;
-        text-align: center;
-        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-        animation: fadeIn 0.5s ease-in;
-    }
-    
-    @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(10px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
-    
-    .diabetic {
-        background: linear-gradient(135deg, #FEE2E2 0%, #FECACA 100%);
-        border: 2px solid #EF4444;
-    }
-    
-    .non-diabetic {
-        background: linear-gradient(135deg, #D1FAE5 0%, #A7F3D0 100%);
-        border: 2px solid #10B981;
-    }
-    
-    .diagnosis-text {
-        font-size: 2.5rem;
-        font-weight: 700;
-        letter-spacing: -0.5px;
-        margin-bottom: 0.5rem;
-    }
-    
-    .confidence-text {
-        font-size: 1rem;
-        color: #4B5563;
-        font-weight: 500;
-    }
-    
-    /* Button styling */
-    .stButton > button {
+    .stExpander > div:first-child {
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         color: white;
-        font-weight: 600;
-        border: none;
+        padding: 1rem;
+        border-radius: 12px 12px 0 0;
+    }
+    
+    /* Progress bar styling */
+    .stProgress > div > div > div {
+        background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
         border-radius: 10px;
-        padding: 16px 24px;
-        font-size: 1.1rem;
-        transition: all 0.3s ease;
-        box-shadow: 0 4px 6px rgba(102, 126, 234, 0.3);
     }
     
-    .stButton > button:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 7px 14px rgba(102, 126, 234, 0.4);
-        background: linear-gradient(135deg, #5a67d8 0%, #6B46C1 100%);
-    }
-    
-    .stButton > button:active {
-        transform: translateY(0);
-    }
-    
-    /* Error message */
     .error-box {
         background: #FEF2F2;
         border: 1px solid #FECACA;
@@ -153,20 +71,16 @@ st.markdown("""
         margin: 1rem 0;
     }
     
-    /* Loading spinner */
-    .spinner-text {
-        color: #4B5563;
-        font-weight: 500;
-    }
-    
-    /* Footer */
-    .footer {
-        text-align: center;
-        color: #9CA3AF;
-        margin-top: 3rem;
-        padding-top: 2rem;
-        border-top: 1px solid #E5E7EB;
-        font-size: 0.875rem;
+    /* Animation for results */
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px) scale(0.95);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
     }
     </style>
 """, unsafe_allow_html=True)
@@ -199,23 +113,129 @@ st.markdown('<div class="main-title">🏥 Diabetes Predictor</div>', unsafe_allo
 st.markdown('<div class="subtitle">Enter patient details for diagnosis</div>', unsafe_allow_html=True)
 
 # ============================================
+# USER GUIDE EXPANDER (SIMPLIFIED TABLE)
+# ============================================
+with st.expander("📖 Click here for instructions and measurement guide", expanded=True):
+    st.markdown("""
+    <div style="background: linear-gradient(135deg, #667eea20 0%, #764ba220 100%); padding: 1.5rem; border-radius: 12px; margin-bottom: 1.5rem;">
+        <h3 style="color: #667eea; margin-bottom: 0.5rem;">🔬 What This App Does</h3>
+        <p style="color: #4B5563; font-size: 1rem; line-height: 1.6;">
+            This intelligent screening tool predicts diabetes risk using 8 medical measurements. 
+            Powered by machine learning trained on the Pima Indians Diabetes dataset.
+        </p>
+    </div>
+    
+    <div style="background: #FEF2F2; border-left: 4px solid #EF4444; padding: 1rem 1.5rem; border-radius: 8px; margin-bottom: 2rem;">
+        <strong style="color: #EF4444;">⚠️ Important:</strong> 
+        <span style="color: #7F1D1D;">This is a <strong>screening tool</strong>, not a medical diagnosis. 
+        Always consult healthcare professionals for proper medical advice.</span>
+    </div>
+    
+    <h3 style="color: #667eea; margin-bottom: 1rem;">📋 How to Use This Tool</h3>
+    <ol style="color: #4B5563; font-size: 1rem; line-height: 1.8; margin-bottom: 2rem;">
+        <li>Enter all available patient measurements in the fields below</li>
+        <li>If a measurement is <strong>unavailable</strong>, leave it as <strong>0</strong> - the app handles missing values automatically</li>
+        <li>Click <strong>"Analyze Sample"</strong> to get instant prediction results</li>
+    </ol>
+    
+    <h3 style="color: #667eea; margin-bottom: 1rem;">📊 Required Measurements & Units</h3>
+    <div style="overflow-x: auto;">
+        <table style="width: 100%; border-collapse: collapse; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+            <thead>
+                <tr style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+                    <th style="padding: 1rem; text-align: left;">Field</th>
+                    <th style="padding: 1rem; text-align: left;">What to Enter</th>
+                    <th style="padding: 1rem; text-align: left;">Units</th>
+                </tr>
+            </thead>
+            <tbody style="color: #4B5563;">
+                <tr style="border-bottom: 1px solid #E5E7EB;">
+                    <td style="padding: 0.8rem 1rem; font-weight: 600;">🤰 Pregnancies</td>
+                    <td style="padding: 0.8rem 1rem;">Number of times pregnant</td>
+                    <td style="padding: 0.8rem 1rem;">Count</td>
+                </tr>
+                <tr style="background: #F9FAFB; border-bottom: 1px solid #E5E7EB;">
+                    <td style="padding: 0.8rem 1rem; font-weight: 600;">🩸 Glucose</td>
+                    <td style="padding: 0.8rem 1rem;">Blood sugar after 2-hour oral glucose test</td>
+                    <td style="padding: 0.8rem 1rem;">mg/dL</td>
+                </tr>
+                <tr style="border-bottom: 1px solid #E5E7EB;">
+                    <td style="padding: 0.8rem 1rem; font-weight: 600;">❤️ Blood Pressure</td>
+                    <td style="padding: 0.8rem 1rem;">Diastolic pressure (bottom number)</td>
+                    <td style="padding: 0.8rem 1rem;">mm Hg</td>
+                </tr>
+                <tr style="background: #F9FAFB; border-bottom: 1px solid #E5E7EB;">
+                    <td style="padding: 0.8rem 1rem; font-weight: 600;">📏 Skin Thickness</td>
+                    <td style="padding: 0.8rem 1rem;">Triceps skin fold thickness</td>
+                    <td style="padding: 0.8rem 1rem;">mm</td>
+                </tr>
+                <tr style="border-bottom: 1px solid #E5E7EB;">
+                    <td style="padding: 0.8rem 1rem; font-weight: 600;">💉 Insulin</td>
+                    <td style="padding: 0.8rem 1rem;">Serum insulin after 2 hours</td>
+                    <td style="padding: 0.8rem 1rem;">μU/mL</td>
+                </tr>
+                <tr style="background: #F9FAFB; border-bottom: 1px solid #E5E7EB;">
+                    <td style="padding: 0.8rem 1rem; font-weight: 600;">⚖️ BMI</td>
+                    <td style="padding: 0.8rem 1rem;">Body Mass Index</td>
+                    <td style="padding: 0.8rem 1rem;">kg/m²</td>
+                </tr>
+                <tr style="border-bottom: 1px solid #E5E7EB;">
+                    <td style="padding: 0.8rem 1rem; font-weight: 600;">👨‍👩‍👧 DPF Score</td>
+                    <td style="padding: 0.8rem 1rem;">Diabetes pedigree function</td>
+                    <td style="padding: 0.8rem 1rem;">Score</td>
+                </tr>
+                <tr style="background: #F9FAFB;">
+                    <td style="padding: 0.8rem 1rem; font-weight: 600;">🎂 Age</td>
+                    <td style="padding: 0.8rem 1rem;">Patient age</td>
+                    <td style="padding: 0.8rem 1rem;">Years</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    
+    <div style="background: #F0FDF4; border: 1px solid #BBF7D0; border-radius: 12px; padding: 1.5rem; margin: 2rem 0;">
+        <h4 style="color: #047857; margin-bottom: 1rem;">💡 Tips for Accurate Predictions</h4>
+        <ul style="color: #065F46; font-size: 0.95rem; line-height: 1.8;">
+        <li><strong>Fill All Fields:</strong> Enter all information for the most accurate prediction.</li>
+            <li><strong>Missing Data:</strong> Leave as <strong>0</strong> if unavailable – the app will fill in median values automatically, but missing inputs may reduce the accuracy or realism of the prediction.</li>
+            <li><strong>Zero Values:</strong> The dataset uses 0 to indicate missing measurements, not actual zero values</li>
+            <li><strong>Units Matter:</strong> Ensure all values are in the specified units</li>
+            <li><strong>BMI Formula:</strong> <code style="background: #DCFCE7; padding: 2px 6px; border-radius: 4px;">BMI = weight(kg) ÷ [height(m)]²</code></li>
+        </ul>
+    </div>
+    
+    <div style="background: linear-gradient(135deg, #E0E7FF 0%, #DDD6FE 100%); padding: 1.5rem; border-radius: 12px; margin-bottom: 1rem;">
+        <h4 style="color: #4338CA; margin-bottom: 1rem;">📊 Understanding Your Result</h4>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div style="background: white; padding: 1rem; border-radius: 8px; border: 2px solid #10B981;">
+                <strong style="color: #047857;">✅ NON-DIABETIC</strong>
+                <p style="color: #6B7280; font-size: 0.9rem; margin: 0.5rem 0 0;">Low risk based on input parameters</p>
+            </div>
+            <div style="background: white; padding: 1rem; border-radius: 8px; border: 2px solid #EF4444;">
+                <strong style="color: #DC2626;">⚠️ DIABETIC</strong>
+                <p style="color: #6B7280; font-size: 0.9rem; margin: 0.5rem 0 0;">High risk - recommend medical follow-up</p>
+            </div>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+
+# ============================================
 # INPUT FIELDS
 # ============================================
-
 
 col1, col2 = st.columns(2, gap="large")
 
 with col1:
-    pregnancies = st.text_input("🤰 Pregnancies", placeholder="0")
-    glucose = st.text_input("🩸 Glucose (mg/dL)", placeholder="0")
-    blood_pressure = st.text_input("❤️ Blood Pressure (mm Hg)", placeholder="0")
-    skin_thickness = st.text_input("📏 Skin Thickness (mm)", placeholder="0")
+    pregnancies = st.text_input("🤰 Pregnancies", placeholder="e.g., 2 (0 if never pregnant)")
+    glucose = st.text_input("🩸 Glucose (mg/dL)", placeholder="e.g., 120 (0 if unknown)")
+    blood_pressure = st.text_input("❤️ Diastolic BP (mm Hg)", placeholder="e.g., 70 (0 if unknown)")
+    skin_thickness = st.text_input("📏 Skin Fold Thickness (mm)", placeholder="e.g., 20 (0 if unknown)")
 
 with col2:
-    insulin = st.text_input("💉 Insulin (μU/mL)", placeholder="0")
-    bmi = st.text_input("⚖️ BMI (kg/m²)", placeholder="0.0")
-    dpf = st.text_input("👨‍👩‍👧 DPF Score", placeholder="0.0")
-    age = st.text_input("🎂 Age (years)", placeholder="0")
+    insulin = st.text_input("💉 2-Hour Insulin (μU/mL)", placeholder="e.g., 85 (0 if unknown)")
+    bmi = st.text_input("⚖️ BMI (kg/m²)", placeholder="e.g., 25.5")
+    dpf = st.text_input("👨‍👩‍👧 Diabetes Pedigree Function", placeholder="e.g., 0.3 (0.5+ = high risk)")
+    age = st.text_input("🎂 Age (years)", placeholder="e.g., 35")
 
 st.markdown('</div>', unsafe_allow_html=True)
 
@@ -225,7 +245,7 @@ st.markdown('</div>', unsafe_allow_html=True)
 submitted = st.button("🔍 Analyze Sample", type="primary", use_container_width=True)
 
 # ============================================
-# RESULTS
+# PROFESSIONAL RESULTS DISPLAY
 # ============================================
 if submitted:
     try:
@@ -243,28 +263,172 @@ if submitted:
         
         input_df = pd.DataFrame([input_values])
         
-        with st.spinner("Analyzing sample..."):
+        with st.spinner("🔬 Analyzing sample..."):
             processed = preprocess_input(input_df, imputation_medians)
             probability = model.predict_proba(processed)[0, 1]
             prediction = int(probability >= threshold)
+            confidence_percent = int(round(probability * 100, 0))
         
-        # Show result
+        # Premium Result Card
         if prediction == 1:
-            st.markdown(
-                '<div class="result-card diabetic"><div class="diagnosis-text">DIABETIC</div></div>',
-                unsafe_allow_html=True
-            )
+            result_card = """
+            <div style="
+                background: linear-gradient(135deg, #FEE2E2 0%, #FECACA 100%);
+                border: 2px solid #EF4444;
+                border-radius: 20px;
+                padding: 3rem 2rem;
+                margin: 2rem 0;
+                text-align: center;
+                box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+                animation: slideUp 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+                position: relative;
+                overflow: hidden;
+            ">
+                <div style="
+                    position: absolute;
+                    top: -10px;
+                    right: -10px;
+                    width: 60px;
+                    height: 60px;
+                    background: #EF4444;
+                    border-radius: 50%;
+                    opacity: 0.1;
+                "></div>
+                <div style="font-size: 4rem; margin-bottom: 1rem;">⚠️</div>
+                <div style="
+                    font-size: 2.8rem;
+                    font-weight: 800;
+                    color: #DC2626;
+                    letter-spacing: -1px;
+                    margin-bottom: 0.5rem;
+                ">DIABETIC</div>
+                <div style="
+                    color: #7F1D1D;
+                    font-size: 1.1rem;
+                    font-weight: 500;
+                ">High risk detected - Medical consultation recommended</div>
+            </div>
+            """
         else:
-            st.markdown(
-                '<div class="result-card non-diabetic"><div class="diagnosis-text">NON-DIABETIC</div></div>',
-                unsafe_allow_html=True
-            )
+            result_card = """
+            <div style="
+                background: linear-gradient(135deg, #D1FAE5 0%, #A7F3D0 100%);
+                border: 2px solid #10B981;
+                border-radius: 20px;
+                padding: 3rem 2rem;
+                margin: 2rem 0;
+                text-align: center;
+                box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+                animation: slideUp 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+                position: relative;
+                overflow: hidden;
+            ">
+                <div style="
+                    position: absolute;
+                    top: -10px;
+                    right: -10px;
+                    width: 60px;
+                    height: 60px;
+                    background: #10B981;
+                    border-radius: 50%;
+                    opacity: 0.1;
+                "></div>
+                <div style="font-size: 4rem; margin-bottom: 1rem;">✅</div>
+                <div style="
+                    font-size: 2.8rem;
+                    font-weight: 800;
+                    color: #047857;
+                    letter-spacing: -1px;
+                    margin-bottom: 0.5rem;
+                ">NON-DIABETIC</div>
+                <div style="
+                    color: #065F46;
+                    font-size: 1.1rem;
+                    font-weight: 500;
+                ">Low risk based on current parameters</div>
+            </div>
+            """
         
-        st.markdown(f'<div class="confidence-text">Confidence: {probability:.1%}</div>', unsafe_allow_html=True)
+        st.markdown(result_card, unsafe_allow_html=True)
+        
+        # Professional Confidence Gauge
+        st.markdown("""
+        <div style="
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            border: 1px solid #E5E7EB;
+            margin-top: 1.5rem;
+        ">
+            <div style="
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 1rem;
+            ">
+                <div style="
+                    font-size: 1.3rem;
+                    font-weight: 600;
+                    color: #374151;
+                ">Model Confidence Level</div>
+                <div style="
+                    font-size: 2rem;
+                    font-weight: 800;
+                    color: #667eea;
+                ">{}%</div>
+            </div>
+            <div style="
+                width: 100%;
+                height: 12px;
+                background: #E5E7EB;
+                border-radius: 10px;
+                overflow: hidden;
+                position: relative;
+            ">
+                <div style="
+                    width: {}%;
+                    height: 100%;
+                    background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+                    border-radius: 10px;
+                    transition: width 1.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+                    box-shadow: 0 0 20px rgba(102, 126, 234, 0.3);
+                "></div>
+            </div>
+            <div style="
+                display: flex;
+                justify-content: space-between;
+                margin-top: 0.5rem;
+                font-size: 0.85rem;
+                color: #9CA3AF;
+            ">
+                <span>Uncertain</span>
+                <span>Very Confident</span>
+            </div>
+        </div>
+        """.format(confidence_percent, confidence_percent), unsafe_allow_html=True)
+        
+        # Additional insights for diabetic results
+        if prediction == 1:
+            st.markdown("""
+            <div style="
+                background: #FEF2F2;
+                border: 1px solid #FECACA;
+                border-radius: 12px;
+                padding: 1.5rem;
+                margin-top: 1.5rem;
+            ">
+                <h4 style="color: #DC2626; margin-bottom: 0.5rem;">💡 Recommended Next Steps</h4>
+                <ul style="color: #7F1D1D; line-height: 1.6; margin: 0;">
+                    <li>Schedule follow-up appointment with healthcare provider</li>
+                    <li>Consider additional diagnostic tests (HbA1c, fasting glucose)</li>
+                    <li>Review lifestyle factors and family history</li>
+                    <li>Monitor symptoms and follow medical guidance</li>
+                </ul>
+            </div>
+            """, unsafe_allow_html=True)
         
     except ValueError:
         st.markdown('<div class="error-box">⚠️ Invalid input. Please enter numeric values.</div>', unsafe_allow_html=True)
     except Exception as e:
         st.error(f"Prediction error: {str(e)}")
-
-
