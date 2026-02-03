@@ -18,7 +18,6 @@ st.set_page_config(
 # ============================================
 st.markdown("""
     <style>
-    /* Global styles */
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
     
     * {
@@ -44,7 +43,6 @@ st.markdown("""
         font-weight: 400;
     }
     
-    /* Expander styling */
     .stExpander {
         background: #F8FAFC;
         border-radius: 12px;
@@ -57,7 +55,6 @@ st.markdown("""
         border-radius: 12px 12px 0 0;
     }
     
-    /* Progress bar styling */
     .stProgress > div > div > div {
         background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
         border-radius: 10px;
@@ -71,7 +68,6 @@ st.markdown("""
         margin: 1rem 0;
     }
     
-    /* Animation for results */
     @keyframes slideUp {
         from {
             opacity: 0;
@@ -113,31 +109,31 @@ st.markdown('<div class="main-title">🏥 Diabetes Predictor</div>', unsafe_allo
 st.markdown('<div class="subtitle">Enter patient details for diagnosis</div>', unsafe_allow_html=True)
 
 # ============================================
-# USER GUIDE EXPANDER (SIMPLIFIED TABLE)
+# USER GUIDE EXPANDER
 # ============================================
 with st.expander("📖 Click here for instructions and measurement guide", expanded=True):
     st.markdown("""
     <div style="background: linear-gradient(135deg, #667eea20 0%, #764ba220 100%); padding: 1.5rem; border-radius: 12px; margin-bottom: 1.5rem;">
         <h3 style="color: #667eea; margin-bottom: 0.5rem;">🔬 What This App Does</h3>
         <p style="color: #4B5563; font-size: 1rem; line-height: 1.6;">
-            This intelligent screening tool predicts diabetes risk using 8 medical measurements. 
+            This intelligent screening tool predicts diabetes risk using 8 medical measurements.
             Powered by machine learning trained on the Pima Indians Diabetes dataset.
         </p>
     </div>
-    
+
     <div style="background: #FEF2F2; border-left: 4px solid #EF4444; padding: 1rem 1.5rem; border-radius: 8px; margin-bottom: 2rem;">
-        <strong style="color: #EF4444;">⚠️ Important:</strong> 
-        <span style="color: #7F1D1D;">This is a <strong>screening tool</strong>, not a medical diagnosis. 
+        <strong style="color: #EF4444;">⚠️ Important:</strong>
+        <span style="color: #7F1D1D;">This is a <strong>screening tool</strong>, not a medical diagnosis.
         Always consult healthcare professionals for proper medical advice.</span>
     </div>
-    
+
     <h3 style="color: #667eea; margin-bottom: 1rem;">📋 How to Use This Tool</h3>
     <ol style="color: #4B5563; font-size: 1rem; line-height: 1.8; margin-bottom: 2rem;">
         <li>Enter all available patient measurements in the fields below</li>
-        <li>If a measurement is <strong>unavailable</strong>, leave it as <strong>0</strong> - the app handles missing values automatically</li>
+        <li>If a measurement is <strong>unavailable</strong>, leave it as <strong>0</strong> – the app handles missing values automatically</li>
         <li>Click <strong>"Analyze Sample"</strong> to get instant prediction results</li>
     </ol>
-    
+
     <h3 style="color: #667eea; margin-bottom: 1rem;">📊 Required Measurements & Units</h3>
     <div style="overflow-x: auto;">
         <table style="width: 100%; border-collapse: collapse; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
@@ -192,18 +188,18 @@ with st.expander("📖 Click here for instructions and measurement guide", expan
             </tbody>
         </table>
     </div>
-    
+
     <div style="background: #F0FDF4; border: 1px solid #BBF7D0; border-radius: 12px; padding: 1.5rem; margin: 2rem 0;">
         <h4 style="color: #047857; margin-bottom: 1rem;">💡 Tips for Accurate Predictions</h4>
         <ul style="color: #065F46; font-size: 0.95rem; line-height: 1.8;">
-        <li><strong>Fill All Fields:</strong> Enter all information for the most accurate prediction.</li>
-            <li><strong>Missing Data:</strong> Leave as <strong>0</strong> if unavailable – the app will fill in median values automatically, but missing inputs may reduce the accuracy or realism of the prediction.</li>
+            <li><strong>Fill All Fields:</strong> Enter all information for the most accurate prediction.</li>
+            <li><strong>Missing Data:</strong> Leave as <strong>0</strong> if unavailable – the app will fill in median values automatically.</li>
             <li><strong>Zero Values:</strong> The dataset uses 0 to indicate missing measurements, not actual zero values</li>
             <li><strong>Units Matter:</strong> Ensure all values are in the specified units</li>
             <li><strong>BMI Formula:</strong> <code style="background: #DCFCE7; padding: 2px 6px; border-radius: 4px;">BMI = weight(kg) ÷ [height(m)]²</code></li>
         </ul>
     </div>
-    
+
     <div style="background: linear-gradient(135deg, #E0E7FF 0%, #DDD6FE 100%); padding: 1.5rem; border-radius: 12px; margin-bottom: 1rem;">
         <h4 style="color: #4338CA; margin-bottom: 1rem;">📊 Understanding Your Result</h4>
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
@@ -222,7 +218,6 @@ with st.expander("📖 Click here for instructions and measurement guide", expan
 # ============================================
 # INPUT FIELDS
 # ============================================
-
 col1, col2 = st.columns(2, gap="large")
 
 with col1:
@@ -236,8 +231,6 @@ with col2:
     bmi = st.text_input("⚖️ BMI (kg/m²)", placeholder="e.g., 25.5")
     dpf = st.text_input("👨‍👩‍👧 Diabetes Pedigree Function", placeholder="e.g., 0.3 (0.5+ = high risk)")
     age = st.text_input("🎂 Age (years)", placeholder="e.g., 35")
-
-st.markdown('</div>', unsafe_allow_html=True)
 
 # ============================================
 # PREDICT BUTTON
@@ -260,154 +253,266 @@ if submitted:
             'DiabetesPedigreeFunction': float(dpf) if dpf else 0.0,
             'Age': int(age) if age else 0
         }
-        
+
         input_df = pd.DataFrame([input_values])
-        
+
         with st.spinner("🔬 Analyzing sample..."):
             processed = preprocess_input(input_df, imputation_medians)
             probability = model.predict_proba(processed)[0, 1]
             prediction = int(probability >= threshold)
             confidence_percent = int(round(probability * 100, 0))
+
+        # Calculate display values
+        threshold_pct = int(round(threshold * 100, 0))
+        model_conf_pct = confidence_percent
         
-        # Premium Result Card
-        if prediction == 1:
-            result_card = """
-            <div style="
-                background: linear-gradient(135deg, #FEE2E2 0%, #FECACA 100%);
-                border: 2px solid #EF4444;
-                border-radius: 20px;
-                padding: 3rem 2rem;
-                margin: 2rem 0;
-                text-align: center;
-                box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-                animation: slideUp 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
-                position: relative;
-                overflow: hidden;
-            ">
-                <div style="
-                    position: absolute;
-                    top: -10px;
-                    right: -10px;
-                    width: 60px;
-                    height: 60px;
-                    background: #EF4444;
-                    border-radius: 50%;
-                    opacity: 0.1;
-                "></div>
-                <div style="font-size: 4rem; margin-bottom: 1rem;">⚠️</div>
-                <div style="
-                    font-size: 2.8rem;
-                    font-weight: 800;
-                    color: #DC2626;
-                    letter-spacing: -1px;
-                    margin-bottom: 0.5rem;
-                ">DIABETIC</div>
-                <div style="
-                    color: #7F1D1D;
-                    font-size: 1.1rem;
-                    font-weight: 500;
-                ">High risk detected - Medical consultation recommended</div>
-            </div>
-            """
+        # Risk tiering
+        if prediction == 0:
+            tier = "Low Risk"
+            tier_color = "#10B981"
+            result_title = "NON-DIABETIC"
+            result_color = "#047857"
+            result_bg = "linear-gradient(135deg, #D1FAE5 0%, #A7F3D0 100%)"
+            result_border = "#10B981"
+            result_icon = "✅"
         else:
-            result_card = """
-            <div style="
-                background: linear-gradient(135deg, #D1FAE5 0%, #A7F3D0 100%);
-                border: 2px solid #10B981;
-                border-radius: 20px;
-                padding: 3rem 2rem;
-                margin: 2rem 0;
-                text-align: center;
-                box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-                animation: slideUp 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
-                position: relative;
-                overflow: hidden;
-            ">
-                <div style="
-                    position: absolute;
-                    top: -10px;
-                    right: -10px;
-                    width: 60px;
-                    height: 60px;
-                    background: #10B981;
-                    border-radius: 50%;
-                    opacity: 0.1;
-                "></div>
-                <div style="font-size: 4rem; margin-bottom: 1rem;">✅</div>
-                <div style="
-                    font-size: 2.8rem;
-                    font-weight: 800;
-                    color: #047857;
-                    letter-spacing: -1px;
-                    margin-bottom: 0.5rem;
-                ">NON-DIABETIC</div>
-                <div style="
-                    color: #065F46;
-                    font-size: 1.1rem;
-                    font-weight: 500;
-                ">Low risk based on current parameters</div>
-            </div>
-            """
-        
-        st.markdown(result_card, unsafe_allow_html=True)
-        
-        # Professional Confidence Gauge
-        st.markdown("""
+            tier = "High Risk" if model_conf_pct >= 50 else "Moderate Risk"
+            tier_color = "#EF4444" if model_conf_pct >= 50 else "#F59E0B"
+            result_title = "DIABETIC"
+            result_color = "#DC2626"
+            result_bg = "linear-gradient(135deg, #FEE2E2 0%, #FECACA 100%)"
+            result_border = "#EF4444"
+            result_icon = "⚠️"
+
+        # Result Card using .format() instead of f-string for safer HTML
+        result_html = """
         <div style="
-            background: white;
-            border-radius: 16px;
-            padding: 2rem;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-            border: 1px solid #E5E7EB;
-            margin-top: 1.5rem;
+            background: {result_bg};
+            border: 2px solid {result_border};
+            border-radius: 20px;
+            padding: 3rem 2rem;
+            margin: 2rem 0;
+            text-align: center;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            animation: slideUp 0.6s ease-out;
         ">
+            <div style="font-size: 4rem; margin-bottom: 1rem;">{result_icon}</div>
             <div style="
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                margin-bottom: 1rem;
-            ">
-                <div style="
-                    font-size: 1.3rem;
-                    font-weight: 600;
-                    color: #374151;
-                ">Model Confidence Level</div>
-                <div style="
-                    font-size: 2rem;
-                    font-weight: 800;
-                    color: #667eea;
-                ">{}%</div>
-            </div>
+                font-size: 2.8rem;
+                font-weight: 800;
+                color: {result_color};
+                margin-bottom: 0.5rem;
+            ">{result_title}</div>
             <div style="
-                width: 100%;
-                height: 12px;
-                background: #E5E7EB;
-                border-radius: 10px;
-                overflow: hidden;
-                position: relative;
-            ">
-                <div style="
-                    width: {}%;
-                    height: 100%;
-                    background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
-                    border-radius: 10px;
-                    transition: width 1.2s cubic-bezier(0.34, 1.56, 0.64, 1);
-                    box-shadow: 0 0 20px rgba(102, 126, 234, 0.3);
-                "></div>
-            </div>
-            <div style="
-                display: flex;
-                justify-content: space-between;
-                margin-top: 0.5rem;
+                color: {result_text_color};
+                font-size: 1.1rem;
+                font-weight: 500;
+            ">{result_message}</div>
+        </div>
+        """.format(
+            result_bg=result_bg,
+            result_border=result_border,
+            result_icon=result_icon,
+            result_color=result_color,
+            result_title=result_title,
+            result_text_color="#065F46" if prediction == 0 else "#7F1D1D",
+            result_message="Low risk based on current parameters" if prediction == 0 else "High risk detected – Medical consultation recommended"
+        )
+        
+        st.markdown(result_html, unsafe_allow_html=True)
+
+        # ============================================
+        # IMPROVED GAUGE VISUALIZATION
+        # ============================================
+        
+        # 1. Calculate safe positions so labels/markers don't fall off the edge
+        # We clamp the percentage between 5% and 95% for the visual marker position
+        marker_pos = max(5, min(95, model_conf_pct))
+        threshold_pos = max(5, min(95, threshold_pct))
+
+        # 2. Define the HTML Structure
+        gauge_html = f"""
+        <style>
+            .risk-card {{
+                font-family: 'Inter', -apple-system, sans-serif;
+                background: white;
+                border-radius: 16px;
+                padding: 2rem;
+                box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+                border: 1px solid #E5E7EB;
+                margin-top: 2rem;
+                animation: slideUp 0.8s ease-out;
+            }}
+            .header {{
+                display: flex; 
+                justify-content: space-between; 
+                align-items: center; 
+                margin-bottom: 2rem;
+            }}
+            .badge {{
+                background: {tier_color}15;
+                color: {tier_color};
+                padding: 0.5rem 1rem;
+                border-radius: 50px;
+                font-weight: 700;
                 font-size: 0.85rem;
-                color: #9CA3AF;
-            ">
-                <span>Uncertain</span>
-                <span>Very Confident</span>
+                border: 1px solid {tier_color}30;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+            }}
+            
+            /* GAUGE TRACK STYLES */
+            .track-container {{
+                position: relative;
+                height: 40px;
+                margin: 2rem 0;
+            }}
+            .track {{
+                position: absolute;
+                top: 50%;
+                left: 0;
+                right: 0;
+                height: 12px;
+                background: linear-gradient(90deg, #10B981 0%, #F59E0B 50%, #EF4444 100%);
+                border-radius: 10px;
+                transform: translateY(-50%);
+                opacity: 0.3;
+            }}
+            
+            /* THRESHOLD MARKER (Vertical Line) */
+            .threshold-line {{
+                position: absolute;
+                left: {threshold_pos}%;
+                top: -5px;
+                bottom: -5px;
+                width: 2px;
+                background: #374151;
+                z-index: 5;
+            }}
+            .threshold-label {{
+                position: absolute;
+                top: -25px;
+                left: 50%;
+                transform: translateX(-50%);
+                font-size: 0.7rem;
+                color: #374151;
+                font-weight: 700;
+                white-space: nowrap;
+            }}
+            
+            /* USER RESULT MARKER (The Dot) */
+            .marker {{
+                position: absolute;
+                left: {marker_pos}%;
+                top: 50%;
+                transform: translate(-50%, -50%);
+                width: 24px;
+                height: 24px;
+                background: {tier_color};
+                border: 4px solid white;
+                border-radius: 50%;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+                z-index: 10;
+                transition: left 1s ease-out;
+            }}
+            .marker-label {{
+                position: absolute;
+                top: 30px;
+                left: 50%;
+                transform: translateX(-50%);
+                background: {tier_color};
+                color: white;
+                padding: 2px 8px;
+                border-radius: 4px;
+                font-size: 0.75rem;
+                font-weight: bold;
+            }}
+
+            /* STATS GRID */
+            .stats-grid {{
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 1.5rem;
+                margin-top: 2.5rem;
+                padding-top: 1.5rem;
+                border-top: 1px solid #F3F4F6;
+            }}
+            .stat-box {{
+                text-align: center;
+                padding: 1rem;
+                background: #F9FAFB;
+                border-radius: 12px;
+            }}
+            .stat-value {{
+                font-size: 1.5rem;
+                font-weight: 800;
+                color: #111827;
+            }}
+            .stat-label {{
+                font-size: 0.8rem;
+                color: #6B7280;
+                margin-top: 0.25rem;
+            }}
+            
+            /* INSIGHT BOX */
+            .insight-box {{
+                margin-top: 1.5rem;
+                padding: 1rem;
+                background: {tier_color}08;
+                border-radius: 8px;
+                border-left: 4px solid {tier_color};
+                color: #4B5563;
+                font-size: 0.9rem;
+                line-height: 1.5;
+            }}
+        </style>
+
+        <div class="risk-card">
+            <div class="header">
+                <div>
+                    <div style="font-size: 1.1rem; font-weight: 700; color: #111827;">Analysis & Confidence</div>
+                    <div style="font-size: 0.85rem; color: #6B7280;">AI Model Certainty</div>
+                </div>
+                <div class="badge">{tier}</div>
+            </div>
+
+            <div class="track-container">
+                <div class="track"></div>
+                
+                <div class="threshold-line">
+                    <div class="threshold-label">Cutoff {threshold_pct}%</div>
+                </div>
+                
+                <div class="marker">
+                    <div class="marker-label">{model_conf_pct}%</div>
+                </div>
+            </div>
+            
+            <div style="display: flex; justify-content: space-between; font-size: 0.75rem; color: #9CA3AF; margin-top: -10px;">
+                <span>0% Safe</span>
+                <span>100% Risk</span>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-box">
+                    <div class="stat-value" style="color: {tier_color}">{model_conf_pct}%</div>
+                    <div class="stat-label">Model Confidence</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value">{threshold_pct}%</div>
+                    <div class="stat-label">Decision Threshold</div>
+                </div>
+            </div>
+
+            <div class="insight-box">
+                <strong>Interpretation:</strong> The model is <strong>{model_conf_pct}%</strong> certain of this result. 
+                {"This score is below the threshold, indicating a healthy result." if prediction == 0 else "This score exceeds the threshold, suggesting a high probability of diabetes."}
             </div>
         </div>
-        """.format(confidence_percent, confidence_percent), unsafe_allow_html=True)
+        """
         
+        st.components.v1.html(gauge_html, height=600)
+
         # Additional insights for diabetic results
         if prediction == 1:
             st.markdown("""
@@ -417,9 +522,10 @@ if submitted:
                 border-radius: 12px;
                 padding: 1.5rem;
                 margin-top: 1.5rem;
+                animation: slideUp 1s ease-out;
             ">
-                <h4 style="color: #DC2626; margin-bottom: 0.5rem;">💡 Recommended Next Steps</h4>
-                <ul style="color: #7F1D1D; line-height: 1.6; margin: 0;">
+                <h4 style="color: #DC2626; margin-bottom: 0.5rem;">🩺 Recommended Next Steps</h4>
+                <ul style="color: #7F1D1D; line-height: 1.6; margin: 0; padding-left: 1.2rem;">
                     <li>Schedule follow-up appointment with healthcare provider</li>
                     <li>Consider additional diagnostic tests (HbA1c, fasting glucose)</li>
                     <li>Review lifestyle factors and family history</li>
@@ -427,8 +533,9 @@ if submitted:
                 </ul>
             </div>
             """, unsafe_allow_html=True)
-        
-    except ValueError:
-        st.markdown('<div class="error-box">⚠️ Invalid input. Please enter numeric values.</div>', unsafe_allow_html=True)
+
+    except ValueError as ve:
+        st.markdown('<div class="error-box">⚠️ Invalid input format. Please enter valid numbers.</div>', unsafe_allow_html=True)
     except Exception as e:
-        st.error(f"Prediction error: {str(e)}")
+        st.error(f"❌ Prediction error: {str(e)}")
+        st.info("💡 Tip: Make sure model files are in the same directory as this script.")
