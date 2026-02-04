@@ -141,6 +141,17 @@ st.markdown('<div class="subtitle">Enter patient details for diagnosis</div>', u
 # ============================================
 # USER GUIDE EXPANDER
 # ============================================
+# 1. CSS to ensure the Expander Title itself is visible
+st.markdown("""
+<style>
+    /* Force the expander header text to adapt to the theme */
+    .streamlit-expanderHeader p {
+        color: var(--text-color) !important;
+        font-weight: 600;
+    }
+</style>
+""", unsafe_allow_html=True)
+
 with st.expander("📖 Click here for instructions and measurement guide", expanded=False):
     st.markdown("""
     <div style="background: white; border-radius: 12px; border: 1px solid #E5E7EB; border-left: 5px solid #6366F1; padding: 1.5rem; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 1.5rem;">
@@ -310,22 +321,23 @@ with st.expander("📖 Click here for instructions and measurement guide", expan
     
 
 # ============================================
-# CUSTOM CSS FOR MODERN INPUTS
+# CUSTOM CSS FOR MODERN INPUTS (DARK MODE FRIENDLY)
 # ============================================
 st.markdown("""
 <style>
     /* 1. Style the Input Field Border & Background */
+    /* We use var(--secondary-background-color) to adapt to light/dark automatically */
     div[data-baseweb="input"] > div {
-        background-color: #FFFFFF;
+        background-color: var(--secondary-background-color) !important;
         border-radius: 8px;
-        border: 1px solid #E5E7EB;
+        border: 1px solid rgba(128, 128, 128, 0.2); /* Subtle transparent border */
         padding: 4px;
         transition: all 0.2s ease;
     }
 
-    /* 2. Style Hover State */
+    /* 2. Style Hover State - Use Primary Color */
     div[data-baseweb="input"] > div:hover {
-        border-color: #6366F1; /* Indigo hover */
+        border-color: var(--primary-color) !important;
     }
 
     /* 3. Remove Default ugly top margin on labels */
@@ -334,25 +346,32 @@ st.markdown("""
     }
     
     /* 4. Style the Labels (The text above the box) */
+    /* Use var(--text-color) so it turns white in dark mode */
     .stTextInput label p {
         font-size: 0.9rem;
         font-weight: 600;
-        color: #374151; /* Dark Gray */
+        color: var(--text-color) !important;
+    }
+
+    /* 5. Fix Input Text Color */
+    input[type="text"] {
+        color: var(--text-color) !important;
     }
 </style>
 """, unsafe_allow_html=True)
 
 # ============================================
-# SECTION HEADER
+# SECTION HEADER (ADAPTIVE COLORS)
 # ============================================
+# We use CSS variables inside the HTML style tags too
 st.markdown("""
 <div style="margin-bottom: 1.5rem; display: flex; align-items: center; gap: 10px;">
-    <div style="background: #EEF2FF; padding: 8px; border-radius: 8px;">
+    <div style="background: var(--secondary-background-color); padding: 8px; border-radius: 8px; border: 1px solid rgba(128,128,128,0.1);">
         <span style="font-size: 1.2rem;">👤</span>
     </div>
     <div>
-        <h4 style="margin: 0; color: #1F2937; font-family: 'Inter', sans-serif; font-weight: 700;">Patient Information</h4>
-        <p style="margin: 0; font-size: 0.9rem; color: #6B7280;">Enter the diagnostic measurements below</p>
+        <h4 style="margin: 0; color: var(--text-color); font-family: 'Inter', sans-serif; font-weight: 700;">Patient Information</h4>
+        <p style="margin: 0; font-size: 0.9rem; opacity: 0.8; color: var(--text-color);">Enter the diagnostic measurements below</p>
     </div>
 </div>
 """, unsafe_allow_html=True)
@@ -360,7 +379,6 @@ st.markdown("""
 # ============================================
 # INPUT FIELDS (MODERN LAYOUT)
 # ============================================
-# We use a container to give it a "Card" feel
 with st.container():
     col1, col2 = st.columns(2, gap="large")
 
