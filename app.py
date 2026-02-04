@@ -141,10 +141,22 @@ st.markdown('<div class="subtitle">Enter patient details for diagnosis</div>', u
 # ============================================
 # USER GUIDE EXPANDER
 # ============================================
-# Force BLACK text for expander headers
+
 st.markdown("""
 <style>
-    .streamlit-expanderHeader p { color: black !important; }
+    /* 1. Targetin ang mismong Expander Header gamit ang testid */
+    div[data-testid="stExpander"] summary {
+        color: black !important; /* Gawing black ang text */
+    }
+    /* 2. Targetin ang lahat ng text elements (p, span, div) sa loob ng header */
+    div[data-testid="stExpander"] summary * {
+        color: black !important;
+    }
+    /* 3. (Optional) Gawing black din ang arrow icon */
+    div[data-testid="stExpander"] summary svg {
+        fill: black !important;
+        color: black !important;
+    }
 </style>
 """, unsafe_allow_html=True)
 
