@@ -141,25 +141,10 @@ st.markdown('<div class="subtitle">Enter patient details for diagnosis</div>', u
 # ============================================
 # USER GUIDE EXPANDER
 # ============================================
-# 1. CSS to force Black Text on White Background for the Expander Header
+# Force BLACK text for expander headers
 st.markdown("""
 <style>
-    /* Target the container of the header to ensure it is white */
-    .streamlit-expanderHeader {
-        background-color: white !important;
-        color: black !important; /* Icons will follow this */
-    }
-
-    /* Target the text inside the header specifically */
-    .streamlit-expanderHeader p {
-        color: #000000 !important; /* Solid Black Text */
-        font-weight: 600;
-    }
-    
-    /* Target the arrow icon to make it black too */
-    .streamlit-expanderHeader svg {
-        fill: #000000 !important;
-    }
+    .streamlit-expanderHeader p { color: black !important; }
 </style>
 """, unsafe_allow_html=True)
 
