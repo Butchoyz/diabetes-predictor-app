@@ -144,18 +144,17 @@ st.markdown('<div class="subtitle">Enter patient details for diagnosis</div>', u
 
 st.markdown("""
 <style>
-    /* 1. Targetin ang mismong Expander Header gamit ang testid */
-    div[data-testid="stExpander"] summary {
-        color: black !important; /* Gawing black ang text */
-    }
-    /* 2. Targetin ang lahat ng text elements (p, span, div) sa loob ng header */
+    /* Targetin ang lahat ng text sa loob ng Expander Header */
     div[data-testid="stExpander"] summary * {
-        color: black !important;
+        color: #4F46E5 !important; /* Modern Indigo Blue - Visible on both Dark & Light */
+        font-weight: 600;           /* Gawing bold para mas kita */
+        font-size: 1.05rem;         /* Palakihin nang konti */
     }
-    /* 3. (Optional) Gawing black din ang arrow icon */
+
+    /* Gawing kulay blue din ang arrow icon */
     div[data-testid="stExpander"] summary svg {
-        fill: black !important;
-        color: black !important;
+        fill: #4F46E5 !important;
+        color: #4F46E5 !important;
     }
 </style>
 """, unsafe_allow_html=True)
