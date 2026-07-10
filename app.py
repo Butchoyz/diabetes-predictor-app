@@ -135,8 +135,13 @@ def preprocess_input(df, medians):
 # ============================================
 # HEADER
 # ============================================
-st.markdown('<div class="main-title">🏥 Diabetes Predictor</div>', unsafe_allow_html=True)
-st.markdown('<div class="subtitle">Enter patient details for diagnosis</div>', unsafe_allow_html=True)
+st.markdown("""
+    <div style="text-align: center; padding: 2.5rem 0 1rem; font-family: 'Inter', sans-serif;">
+        <span style="font-size: 2.8rem; font-style: normal; display: inline-block; vertical-align: middle; margin-right: 10px;">🏥</span>
+        <span class="main-title" style="font-size: 2.8rem; font-weight: 700; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: -0.5px; display: inline-block; vertical-align: middle;">Diabetes Predictor</span>
+    </div>
+""", unsafe_allow_html=True)
+
 
 # ============================================
 # USER GUIDE EXPANDER
