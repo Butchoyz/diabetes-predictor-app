@@ -13,6 +13,7 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
+
 # ============================================
 # MODERN CUSTOM CSS (COMPLETE)
 # ============================================
@@ -23,7 +24,38 @@ st.markdown("""
     * {
         font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     }
+
+    /* ============================================ */
+    /* MAIN WEBSITE BACKGROUND (CLEAN AI DESIGN)    */
+    /* ============================================ */
+    [data-testid="stAppViewContainer"] {
+        background-color: #fcfcfd; /* Pinaka-malinis na off-white base */
+        
+        /* 
+           Layer 1 & 2: Soft ambient glow sa top-left (blue) at top-right (purple) 
+           Layer 3: Subtle modern dot pattern (24px spacing) 
+        */
+        background-image: 
+            radial-gradient(at 0% 0%, rgba(102, 126, 234, 0.12) 0px, transparent 50%),
+            radial-gradient(at 100% 0%, rgba(118, 75, 162, 0.12) 0px, transparent 50%),
+            radial-gradient(#e2e8f0 1px, transparent 1px);
+            
+        background-size: 100% 100%, 100% 100%, 24px 24px;
+        background-attachment: fixed;
+    }
+
+    /* Ginagawang transparent ang top bar para lumitaw ang background design */
+    [data-testid="stHeader"] {
+        background-color: transparent !important;
+    }
+
+    /* Malinis na puting sidebar na may manipis na border */
+    [data-testid="stSidebar"] {
+        background-color: rgba(255, 255, 255, 0.95);
+        border-right: 1px solid #edf2f7;
+    }
     
+    /* (The rest of your existing CSS stays exactly the same below) */
     .main-title {
         font-size: 2.8rem;
         font-weight: 700;
@@ -44,10 +76,11 @@ st.markdown("""
     }
     
     .stExpander {
-        background: #F8FAFC;
+        background: #FFFFFF;
         border-radius: 12px;
         margin-bottom: 2rem;
         border: 1px solid #E2E8F0;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.02);
     }
     .stExpander > div:first-child {
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
