@@ -196,8 +196,12 @@ with st.expander("📖 Click here for instructions and measurement guide", expan
     <div style="background: #EEF2FF; color: #4F46E5; min-width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.9rem; border: 1px solid #C7D2FE;">
                 2
     </div>
-    <div style="color: #374151; font-family: 'Inter', sans-serif; font-size: 0.95rem; line-height: 1.5; padding-top: 4px;">
-                If a measurement is <strong>unavailable</strong>, leave it as <strong>0</strong> – the app handles missing values automatically.
+    <div style="color: #374151; font-family: 'Inter', sans-serif; font-size: 0.95rem; line-height: 1.6; padding: 10px; background: #F8FAFC; border-radius: 8px; border: 1px dashed #E2E8F0; margin: 8px 0;">
+    <strong>✓ Missing Data:</strong> If a measurement is <strong>unavailable</strong>, leave it as <strong>0</strong>. 
+    The app will automatically handle it and fill in the standard <strong>median values</strong> for:
+    <span style="color: #2563EB; font-weight: 600; display: block; margin-top: 4px; font-size: 0.88rem;">
+        • Glucose • Blood Pressure • Skin Thickness • Insulin • BMI
+    </span>
     </div>
     </div>
 
