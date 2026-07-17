@@ -451,9 +451,9 @@ with st.container():
         )
         
         skin_thickness = st.text_input(
-            "📏 Skin Thickness", 
+            "📏 Skin Thickness *", # Added asterisk
             placeholder="e.g., 20", 
-            help="Triceps skin fold thickness (mm)"
+            help="Triceps skin fold thickness (mm) [REQUIRED]"
         )
 
     with col2:
@@ -464,21 +464,21 @@ with st.container():
         )
         
         bmi = st.text_input(
-            "⚖️ BMI Index", 
+            "⚖️ BMI Index *", # Added asterisk
             placeholder="e.g., 25.5", 
-            help="Body mass index (weight in kg / height in m²)"
+            help="Body mass index (weight in kg / height in m²) [REQUIRED]"
         )
         
         dpf = st.text_input(
-            "🧬 Diabetes Pedigree", 
+            "🧬 Diabetes Pedigree *", # Added asterisk
             placeholder="e.g., 0.35", 
-            help="Diabetes Pedigree Function (genetic score)"
+            help="Diabetes Pedigree Function (genetic score) [REQUIRED]"
         )
         
         age = st.text_input(
-            "🎂 Age", 
+            "🎂 Age *", # Added asterisk
             placeholder="e.g., 35", 
-            help="Age in years"
+            help="Age in years [REQUIRED]"
         )
 
 # ============================================
@@ -492,19 +492,25 @@ submitted = st.button("🔍 Analyze Sample", type="primary", use_container_width
 # PROFESSIONAL RESULTS DISPLAY
 # ============================================
 if submitted:
+    # 🚨 REQUIRED FIELDS VALIDATION 🚨
+    if not skin_thickness or not bmi or not dpf or not age:
+        st.error("⚠️ **Missing Information:** Please fill in the required fields (Skin Thickness, BMI Index, Diabetes Pedigree, and Age).")
+        st.stop() # This immediately stops the script so it won't crash trying to predict
+
     try:
         # Convert inputs
         input_values = {
             'Pregnancies': int(pregnancies) if pregnancies else 0,
             'Glucose': float(glucose) if glucose else 0.0,
             'BloodPressure': float(blood_pressure) if blood_pressure else 0.0,
-            'SkinThickness': float(skin_thickness) if skin_thickness else 0.0,
+            'SkinThickness': float(skin_thickness), # No longer need 'if else 0.0' because it's required
             'Insulin': float(insulin) if insulin else 0.0,
-            'BMI': float(bmi) if bmi else 0.0,
-            'DiabetesPedigreeFunction': float(dpf) if dpf else 0.0,
-            'Age': int(age) if age else 0
+            'BMI': float(bmi),
+            'DiabetesPedigreeFunction': float(dpf),
+            'Age': int(age)
         }
-
+        
+        # ... the rest of your try block remains exactly the same ...
         input_df = pd.DataFrame([input_values])
 
         with st.spinner("🔬 Analyzing sample..."):
