@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import joblib
 import numpy as np
+from abc import ABC, abstractmethod
 
 # ============================================
 # PAGE CONFIG
@@ -14,7 +15,70 @@ st.set_page_config(
 )
 
 # ============================================
-# PREMIUM BUBBLES & AURORA BACKGROUND CSS
+# 1. THE BASE CLASS (Standard Structure for AI Models)
+# ============================================
+class BasePredictor(ABC):
+    """
+    Isang abstract base class na nagbibigay ng template para sa kahit anong 
+    disease prediction models sa iyong application sa hinaharap.
+    """
+    def __init__(self, model_path, medians_path, threshold_path):
+        self.model_path = model_path
+        self.medians_path = medians_path
+        self.threshold_path = threshold_path
+        self.model = None
+        self.medians = None
+        self.threshold = None
+        self.load_assets()
+
+    def load_assets(self):
+        """Standard method para mag-load ng serialized models at data assets."""
+        self.model = joblib.load(self.model_path)
+        self.medians = joblib.load(self.medians_path)
+        self.threshold = joblib.load(self.threshold_path)
+
+    @abstractmethod
+    def preprocess(self, df: pd.DataFrame) -> pd.DataFrame:
+        """Kailangang i-define ito ng kahit anong anak na class."""
+        pass
+
+    def predict(self, df: pd.DataFrame):
+        """Standard prediction at confidence scoring logic."""
+        processed_df = self.preprocess(df.copy())
+        probability = self.model.predict_proba(processed_df)[0, 1]
+        prediction = int(probability >= self.threshold)
+        confidence = int(round(probability * 100, 0))
+        return prediction, confidence
+
+# ============================================
+# 2. THE DERIVED CLASS (Specific to Diabetes Logic)
+# ============================================
+class DiabetesPredictor(BasePredictor):
+    """
+    Derived class ng BasePredictor na naglalaman ng preprocessing pipeline
+    at median imputation para sa diabetes dataset.
+    """
+    def preprocess(self, df: pd.DataFrame) -> pd.DataFrame:
+        for col, median_val in self.medians.items():
+            df[col] = df[col].replace(0, np.nan)
+            df[col].fillna(median_val, inplace=True)
+        return df
+
+# ============================================
+# INITIALIZE & CACHE MODEL OBJECT
+# ============================================
+@st.cache_resource
+def get_predictor():
+    return DiabetesPredictor(
+        model_path="diabetes_model.joblib",
+        medians_path="imputation_medians.joblib",
+        threshold_path="optimal_threshold.joblib"
+    )
+
+predictor = get_predictor()
+
+# ============================================
+# PREMIUM CSS (AURORA BACKDROP & GLASSMORPHISM)
 # ============================================
 st.markdown("""
 <style>
@@ -176,7 +240,7 @@ div.stButton > button:first-child:hover {
 """, unsafe_allow_html=True)
 
 # ============================================
-# MORE ANIMATED BUBBLES BACKGROUND (PURE CSS)
+# 15 ANIMATED DRIFTING GLASS BUBBLES
 # ============================================
 st.markdown("""
 <style>
@@ -198,7 +262,6 @@ st.markdown("""
         animation: floatUp infinite ease-in-out;
     }
     
-    /* 15 Dynamic Bubbles for richer background */
     .glass-bubble:nth-child(1) { left: 10%; width: 60px; height: 60px; animation-duration: 12s; animation-delay: 0s; }
     .glass-bubble:nth-child(2) { left: 30%; width: 100px; height: 100px; animation-duration: 18s; animation-delay: 2s; background: rgba(124, 58, 237, 0.05); }
     .glass-bubble:nth-child(3) { left: 55%; width: 40px; height: 40px; animation-duration: 10s; animation-delay: 5s; }
@@ -235,25 +298,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # ============================================
-# LOAD MODEL & ASSETS
-# ============================================
-@st.cache_resource
-def load_model():
-    model = joblib.load("diabetes_model.joblib")
-    medians = joblib.load("imputation_medians.joblib")
-    threshold = joblib.load("optimal_threshold.joblib")
-    return model, medians, threshold
-
-model, imputation_medians, threshold = load_model()
-
-def preprocess_input(df, medians):
-    for col, median_val in medians.items():
-        df[col] = df[col].replace(0, np.nan)
-        df[col].fillna(median_val, inplace=True)
-    return df
-
-# ============================================
-# HEADER WITH PREMIUM SHIELD ICON
+# APP TITLE & SHIELD ICON (RE-DESIGNED)
 # ============================================
 st.markdown("""
 <div style="text-align: center; padding: 2.5rem 0 1rem; position: relative; z-index: 10;">
@@ -279,7 +324,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # ============================================
-# USER GUIDE EXPANDER (FIXED RENDERING BUG)
+# USER GUIDE EXPANDER (FIXED RENDER BUG)
 # ============================================
 st.markdown("""
 <style>
@@ -296,6 +341,7 @@ div[data-testid="stExpander"] summary svg {
 """, unsafe_allow_html=True)
 
 with st.expander("📖 Click here for instructions and measurement guide", expanded=False):
+    # FIXED: NO spaces/indents on each raw HTML line to prevent markdown code blocks
     st.markdown("""
 <div class="glass-card" style="border-left: 5px solid #6366F1; margin-top: 1.2rem;">
 <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 0.75rem;">
@@ -424,7 +470,7 @@ Tips for Accurate Predictions
 <span style="font-weight: 500;"><strong>Units Matter:</strong> Ensure all values are in the specified units (mg/dL, mm Hg, etc).</span>
 </li>
 <li style="margin-top: 1rem; width: 100%;">
-<!-- FULLY RESPONSIVE BMI FORMULA CONTAINER -->
+<!-- RESPONSIVE BMI FORMULA BADGE -->
 <div style="background: rgba(255, 255, 255, 0.9); border: 1px solid #86EFAC; padding: 0.75rem 1rem; border-radius: 8px; display: block; width: 100%; max-width: 320px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); box-sizing: border-box;">
 <strong style="color: #166534; font-size: 0.85rem; letter-spacing: 0.5px;">BMI FORMULA:</strong><br>
 <code style="font-family: monospace; color: #047857; font-size: 0.95rem; font-weight: 700; background: transparent; word-break: break-word; display: inline-block; max-width: 100%;">weight(kg) ÷ [height(m)]²</code>
@@ -493,16 +539,16 @@ st.markdown("###")
 submitted = st.button("🔍 Analyze Sample", type="primary", use_container_width=True)
 
 # ============================================
-# PROFESSIONAL RESULTS DISPLAY
+# RESULTS PROCESSOR (CALLING THE OOP MODEL)
 # ============================================
 if submitted:
-    # 🚨 ONLY DPF & AGE ARE ABSOLUTELY REQUIRED TO PREVENT CRASHES 🚨
+    # 🚨 ONLY GENETIC SCORE & AGE ARE STRONGLY REQUIRED (ALL OTHERS ARE AUTOMATICALLY IMPUTED) 🚨
     if not dpf or not age:
         st.error("⚠️ **Missing Information:** Please fill in the required fields (Diabetes Pedigree and Age).")
         st.stop() 
 
     try:
-        # Imputation defaults to 0.0 if left blank, passing cleanly into your model pipeline
+        # Construct DataFrame input dictionary
         input_values = {
             'Pregnancies': int(pregnancies) if pregnancies else 0,
             'Glucose': float(glucose) if glucose else 0.0,
@@ -517,12 +563,10 @@ if submitted:
         input_df = pd.DataFrame([input_values])
 
         with st.spinner("🔬 Analyzing sample..."):
-            processed = preprocess_input(input_df, imputation_medians)
-            probability = model.predict_proba(processed)[0, 1]
-            prediction = int(probability >= threshold)
-            confidence_percent = int(round(probability * 100, 0))
+            # Gagamitin ang malinis na OOP Class Method
+            prediction, confidence_percent = predictor.predict(input_df)
 
-        threshold_pct = int(round(threshold * 100, 0))
+        threshold_pct = int(round(predictor.threshold * 100, 0))
         model_conf_pct = confidence_percent
         
         if prediction == 0:
@@ -577,7 +621,7 @@ if submitted:
         st.markdown(result_html, unsafe_allow_html=True)
 
         # ============================================
-        # RESPONSIVE GAUGE
+        # RESPONSIVE GLASSMORPHISM GAUGE CARD
         # ============================================
         marker_pos = max(5, min(95, model_conf_pct))
         threshold_pos = max(5, min(95, threshold_pct))
