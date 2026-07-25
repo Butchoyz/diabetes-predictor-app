@@ -332,7 +332,7 @@ with col1:
         placeholder="e.g., 20",
         help="What to input:\nTriceps skin fold thickness measured using a caliper tool (in mm).\n\nWhy it's a factor:\nThis is used to estimate body fat. Having too much body fat is directly linked to insulin resistance and poor blood sugar control."
     )
-    st.markdown('<div class="ref-pill"><span style="color: #059669;">🟢 Normal: 10–30</span><span style="color: #e11d48;">🔴 Risk: > 35</span></div>', unsafe_allow_html=True)
+    st.markdown('<div class="ref-pill"><span style="color: #059669;">🟢 Normal: 10–20</span><span style="color: #e11d48;">🔴 Risk: > 25</span></div>', unsafe_allow_html=True)
 
 with col2:
     insulin = st.text_input(
