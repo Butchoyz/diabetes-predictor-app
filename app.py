@@ -200,7 +200,291 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
+
 # ============================================
+# CLEAN HEADER FOR DIAGNOSTIC PROFILE
+# ============================================
+st.markdown("""
+<div style="background: rgba(255, 255, 255, 0.65); backdrop-filter: blur(16px); padding: 1.25rem; border-radius: 16px; border: 1px solid rgba(255, 255, 255, 0.9); margin-bottom: 2rem; box-shadow: 0 8px 30px rgba(0,0,0,0.03); position: relative; z-index: 10;">
+    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 8px;">
+        <div style="background: #4f46e5; color: white; width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; box-shadow: 0 4px 10px rgba(79,70,229,0.3);">📋</div>
+        <h3 style="margin: 0; color: #0f172a; font-weight: 800; font-size: 1.4rem; letter-spacing: -0.5px;">Patient Diagnostic Profile</h3>
+    </div>
+    <p style="margin: 0; color: #475569; font-size: 0.9rem; line-height: 1.5;">Please enter the patient's medical details below. Tap the <b>(?)</b> icon next to each field to understand the clinical context and risk factors.</p>
+</div>
+""", unsafe_allow_html=True)
+
+# ============================================
+# INPUT FIELDS (2-COLUMN GRID WITH REFS)
+# ============================================
+col1, col2 = st.columns(2, gap="medium")
+
+with col1:
+    pregnancies = st.text_input(
+        "🤰 Pregnancies", 
+        placeholder="e.g., 2",
+        help="What to input:\nNumber of times the patient has been pregnant (Enter 0 if male or never pregnant).\n\nWhy it's a factor:\nPregnancy causes hormonal changes that can lead to temporary insulin resistance (Gestational Diabetes). This increases the chances of getting Type 2 Diabetes later in life."
+    )
+    st.markdown('<div class="ref-pill"><span style="color: #059669;">🟢 Normal: 0–2</span><span style="color: #e11d48;">🔴 Risk: ≥ 3</span></div>', unsafe_allow_html=True)
+
+    glucose = st.text_input(
+        "🩸 Plasma Glucose (mg/dL)", 
+        placeholder="e.g., 120",
+        help="What to input:\nBlood sugar level from a Fasting Glucose or 2-hour Oral Glucose Tolerance Test (in mg/dL).\n\nWhy it's a factor:\nThis is the main indicator of diabetes. High blood sugar means the body isn't making enough insulin or isn't using it properly."
+    )
+    st.markdown('<div class="ref-pill"><span style="color: #059669;">🟢 Normal: 70–139</span><span style="color: #e11d48;">🔴 Risk: ≥ 140</span></div>', unsafe_allow_html=True)
+
+    blood_pressure = st.text_input(
+        "❤️ Blood Pressure (mm Hg)", 
+        placeholder="e.g., 72",
+        help="What to input:\nDiastolic Blood Pressure, which is the lower number in your blood pressure reading (in mm Hg).\n\nWhy it's a factor:\nHigh blood pressure and diabetes are closely related. High BP damages blood vessels and makes insulin resistance worse."
+    )
+    st.markdown('<div class="ref-pill"><span style="color: #059669;">🟢 Normal: 60–80</span><span style="color: #e11d48;">🔴 Risk: ≥ 90</span></div>', unsafe_allow_html=True)
+
+    skin_thickness = st.text_input(
+        "📏 Skin Thickness (mm)", 
+        placeholder="e.g., 20",
+        help="What to input:\nTriceps skin fold thickness measured using a caliper tool (in mm).\n\nWhy it's a factor:\nThis is used to estimate body fat. Having too much body fat is directly linked to insulin resistance and poor blood sugar control."
+    )
+    st.markdown('<div class="ref-pill"><span style="color: #059669;">🟢 Normal: 10–20</span><span style="color: #e11d48;">🔴 Risk: > 25</span></div>', unsafe_allow_html=True)
+
+with col2:
+    insulin = st.text_input(
+        "💉 Serum Insulin (μU/mL)", 
+        placeholder="e.g., 85",
+        help="What to input:\n2-Hour Serum Insulin level after consuming glucose (in μU/mL).\n\nWhy it's a factor:\nVery high insulin levels show that the body is working extra hard because the cells are ignoring the insulin. This is known as Insulin Resistance."
+    )
+    st.markdown('<div class="ref-pill"><span style="color: #059669;">🟢 Normal: 16–166</span><span style="color: #e11d48;">🔴 Risk: > 166</span></div>', unsafe_allow_html=True)
+
+    bmi = st.text_input(
+        "⚖️ BMI Index (kg/m²)", 
+        placeholder="e.g., 25.5",
+        help="What to input:\nBody Mass Index, which is your weight in kilograms divided by your height in meters squared.\n\nWhy it's a factor:\nExcess body weight makes it harder for the body to use insulin properly, causing sugar to build up in the blood instead of going into the cells."
+    )
+    st.markdown('<div class="ref-pill"><span style="color: #059669;">🟢 Normal: 18.5–24.9</span><span style="color: #e11d48;">🔴 Risk: ≥ 25.0</span></div>', unsafe_allow_html=True)
+
+    dpf = st.text_input(
+        "🧬 Diabetes Pedigree *", 
+        placeholder="e.g., 0.35",
+        help="What to input:\n[REQUIRED] A genetic score based on your family's history of diabetes (usually ranges from 0.08 to 2.42).\n\nWhy it's a factor:\nDiabetes is strongly connected to genetics. Having parents or close relatives with diabetes significantly increases your own genetic risk."
+    )
+    st.markdown('<div class="ref-pill"><span style="color: #059669;">🟢 Normal: < 0.50</span><span style="color: #e11d48;">🔴 Risk: ≥ 0.50</span></div>', unsafe_allow_html=True)
+
+    age = st.text_input(
+        "🎂 Age (Years) *", 
+        placeholder="e.g., 35",
+        help="What to input:\n[REQUIRED] The patient's current age in years.\n\nWhy it's a factor:\nAs we get older, our pancreas naturally produces less insulin and we tend to become less physically active, both of which increase the risk of diabetes."
+    )
+    st.markdown('<div class="ref-pill"><span style="color: #059669;">🟢 Normal: < 35 yrs</span><span style="color: #e11d48;">🔴 Risk: ≥ 35 yrs</span></div>', unsafe_allow_html=True)
+
+submitted = st.button("🔍 Analyze Sample Across Models", type="primary", use_container_width=True)
+
+# ============================================
+# RESULTS PROCESSOR
+# ============================================
+if submitted:
+    if not dpf or not age:
+        st.error("⚠️ **Missing Input:** Please provide the Diabetes Pedigree Function and Age.")
+        st.stop() 
+
+    try:
+        input_values = {
+            'Pregnancies': int(pregnancies) if pregnancies else 0,
+            'Glucose': float(glucose) if glucose else 0.0,
+            'BloodPressure': float(blood_pressure) if blood_pressure else 0.0,
+            'SkinThickness': float(skin_thickness) if skin_thickness else 0.0,
+            'Insulin': float(insulin) if insulin else 0.0,
+            'BMI': float(bmi) if bmi else 0.0,
+            'DiabetesPedigreeFunction': float(dpf),
+            'Age': int(age)
+        }
+        input_df = pd.DataFrame([input_values])
+
+        st.markdown("<h3 style='text-align: center; color: #0f172a; margin: 3rem 0 0rem; font-weight: 800; letter-spacing: -0.5px; position: relative; z-index: 10;'>📊 Diagnostic Report & Models</h3>", unsafe_allow_html=True)
+        
+        with st.spinner("🔬 Running advanced prediction models..."):
+            results_html = "<div class='results-wrapper'><div class='results-grid'>"
+            
+            # Predict using Proposed Model
+            proposed_pred = get_proposed_predictor()
+            p_val, p_conf = proposed_pred.predict(input_df)
+            p_thr = int(round(proposed_pred.threshold * 100, 0))
+            results_html += create_result_card("Stacking Ensemble Model", p_val, p_conf, p_thr, is_proposed=True)
+            
+            # Predict using Baseline Models
+            for model_name in BASELINE_MODELS.keys():
+                base_pred = get_baseline_predictor(model_name)
+                b_val, b_conf = base_pred.predict(input_df)
+                b_thr = int(round(base_pred.threshold * 100, 0))
+                results_html += create_result_card(model_name, b_val, b_conf, b_thr, is_proposed=False)
+                
+            results_html += "</div></div>"
+            
+            st.markdown(results_html, unsafe_allow_html=True)
+
+    except Exception as e:
+        st.error(f"⚠️ Error Processing Inputs: {e}")
+
+# ============================================
+# THRESHOLD EXPLANATION & CLINICAL JUSTIFICATION
+# ============================================
+st.markdown("""
+<style>
+/* Main Container */
+.threshold-container {
+    background: rgba(255, 255, 255, 0.65);
+    backdrop-filter: blur(16px);
+    border: 1px solid rgba(226, 232, 240, 0.8);
+    border-radius: 16px;
+    padding: 2rem;
+    margin: 2rem 0;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+}
+
+/* Header Styling */
+.threshold-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 1.5rem;
+}
+.threshold-icon {
+    background: #f59e0b;
+    color: white;
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    box-shadow: 0 4px 10px rgba(245, 158, 11, 0.3);
+}
+
+/* Responsive Grid for Content */
+.threshold-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 1.5rem;
+}
+
+/* Individual Info Cards */
+.info-card {
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 12px;
+    padding: 1.5rem;
+    border: 1px solid #e2e8f0;
+    transition: transform 0.2s ease;
+}
+.info-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.04);
+}
+
+.info-title {
+    font-size: 1.05rem;
+    font-weight: 800;
+    color: #0f172a;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.info-text {
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: #475569;
+    margin: 0;
+}
+
+.highlight-badge {
+    background: #fee2e2;
+    color: #b91c1c;
+    padding: 2px 6px;
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 0.8rem;
+}
+
+.proposed-highlight {
+    background: #e0e7ff;
+    color: #4f46e5;
+    padding: 2px 6px;
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 0.8rem;
+}
+
+/* References Section */
+.references-section {
+    border-top: 1px solid #e2e8f0;
+    padding-top: 1.2rem;
+    margin-top: 1rem;
+}
+.ref-title {
+    font-size: 0.85rem;
+    font-weight: 800;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 8px;
+}
+.ref-list {
+    font-size: 0.75rem;
+    color: #94a3b8;
+    line-height: 1.5;
+    margin: 0;
+    padding-left: 1.2rem;
+}
+.ref-list li { margin-bottom: 6px; }
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+    .threshold-grid { grid-template-columns: 1fr; }
+    .threshold-container { padding: 1.25rem; }
+}
+</style>
+
+<div class="threshold-container">
+<div class="threshold-header">
+<div class="threshold-icon">⚖️</div>
+<h3 style="margin: 0; color: #0f172a; font-weight: 800; font-size: 1.4rem; letter-spacing: -0.5px;">Decision Threshold Tuning</h3>
+</div>
+<div class="threshold-grid">
+<div class="info-card">
+<div class="info-title">📊 The Baseline Default (0.50)</div>
+<p class="info-text">
+The baseline models in this study use the standard default classification threshold of <span class="highlight-badge">0.50 (50%)</span>. 
+While standard, this predefined cut-off point is widely considered suboptimal for imbalanced medical datasets. 
+Relying purely on a 0.50 threshold often fails to detect enough positive cases in imbalanced classification tasks, 
+missing patients who actually require medical attention.
+</p>
+</div>
+<div class="info-card" style="border: 1px solid rgba(99, 102, 241, 0.4); background: linear-gradient(180deg, rgba(255,255,255,0.9) 0%, rgba(238,242,255,0.5) 100%);">
+<div class="info-title" style="color: #4f46e5;">⭐ Our Proposed Strategy</div>
+<p class="info-text">
+To catch more <i>True Positives</i>, we dynamically lowered the threshold. However, doing so naturally increases <i>False Positives</i>. 
+To balance this, our proposed model scanned threshold limits from <span class="proposed-highlight">0.25 to 0.49</span> to 
+<b>maximize Recall</b> while enforcing a strict <b>Precision constraint of ≥ 35%</b>. 
+<br><br>
+This 35% constraint is clinically motivated by the <b>ADA 2022 screening guidelines</b>, which show that standard screening definitions yield minimum precisions between 17.2% and 50.5%.
+</p>
+</div>
+</div>
+<div class="references-section">
+<div class="ref-title">Academic & Clinical References</div>
+<ul class="ref-list">
+<li><b>Standard Thresholds:</b> "Post-hoc tuning the cut-off point of decision function," Scikit-learn. <a href="https://scikit-learn.org/stable/auto_examples/model_selection/plot_tuned_decision_threshold.html" target="_blank" style="color: #64748b;">[Link]</a></li>
+<li><b>Imbalanced Data & False Positives:</b> American Chemical Society, "GHOST: Adjusting the decision threshold to handle imbalanced data in machine learning," ACS Publications, 2021, doi: 10.1021/acs.jcim.1c00160.</li>
+<li><b>ADA 2022 Precision-Recall Context:</b> M. K. Ali et al., "Impact of changes in diabetes screening guidelines on testing eligibility and potential yield among adults without diagnosed diabetes in the United States," <i>Diabetes Research and Clinical Practice</i>, vol. 197, p. 110572, Mar. 2023, doi: 10.1016/j.diabres.2023.110572.</li>
+</ul>
+</div>
+</div>
+""", unsafe_allow_html=True)
+
+        # ============================================
 # MODEL PERFORMANCE METRICS TABLE
 # ============================================
 st.markdown("""
@@ -377,7 +661,90 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-# ============================================
+        # ==========================================
+# LIVE MODEL EVALUATION SYSTEM
+# ==========================================
+
+st.markdown("""
+<div style="margin-top: 1.5rem; margin-bottom: 1rem;">
+    <div style="display: flex; align-items: center; gap: 10px;">
+        <span style="font-size: 1.5rem;">🧪</span>
+        <h3 style="margin: 0; color: #0f172a; font-weight: 700; font-size: 1.35rem;">Live Model Evaluation</h3>
+    </div>
+    <p style="color: #475569; font-size: 0.95rem; margin-top: 4px; margin-bottom: 0;">
+        Run the test dataset through saved models to verify performance metrics in real-time.
+    </p>
+</div>
+""", unsafe_allow_html=True)
+
+if st.button("▶️ Run Data Processing & Evaluation", use_container_width=True, type="primary"):
+    
+    status_text = st.empty()
+    progress_bar = st.progress(0)
+    
+    # ---------------------------------------------------------
+    # SIMULATED PIPELINE STEPS
+    # ---------------------------------------------------------
+    status_text.info("🔄 **Step 1/3:** Loading pre-processed test datasets...")
+    time.sleep(0.4)
+    progress_bar.progress(33)
+    
+    status_text.info("⚙️ **Step 2/3:** Applying optimal decision threshold...")
+    time.sleep(0.4)
+    progress_bar.progress(66)
+    
+    status_text.info("📊 **Step 3/3:** Evaluating performance metrics across all architectures...")
+    time.sleep(0.4)
+    progress_bar.progress(100)
+    
+    # Clean up status indicators after completion
+    time.sleep(0.2)
+    status_text.empty()
+    progress_bar.empty()
+    
+    st.success("✅ **Evaluation Complete!** All metrics calculated successfully.")
+    
+    # ---------------------------------------------------------
+    # PRE-DEFINED COLAB BENCHMARK RESULTS
+    # ---------------------------------------------------------
+    results_data = [
+        {"Model Architecture": "Stacking Ensemble (Calibrated) PROPOSED", "Accuracy": 0.7273, "Precision": 0.5732, "Recall": 0.8704, "F1-Score": 0.6912, "ROC-AUC": 0.8169},
+        {"Model Architecture": "Logistic Regression", "Accuracy": 0.7662, "Precision": 0.6792, "Recall": 0.6545, "F1-Score": 0.6667, "ROC-AUC": 0.8197},
+        {"Model Architecture": "Random Forest", "Accuracy": 0.7597, "Precision": 0.6607, "Recall": 0.6727, "F1-Score": 0.6667, "ROC-AUC": 0.8399},
+        {"Model Architecture": "Naive Bayes", "Accuracy": 0.7532, "Precision": 0.6441, "Recall": 0.6909, "F1-Score": 0.6667, "ROC-AUC": 0.8307},
+        {"Model Architecture": "Support Vector Machine", "Accuracy": 0.7532, "Precision": 0.6809, "Recall": 0.5818, "F1-Score": 0.6275, "ROC-AUC": 0.8082},
+        {"Model Architecture": "LightGBM", "Accuracy": 0.7532, "Precision": 0.6269, "Recall": 0.7636, "F1-Score": 0.6885, "ROC-AUC": 0.7897},
+        {"Model Architecture": "K-Nearest Neighbors", "Accuracy": 0.7468, "Precision": 0.6429, "Recall": 0.6545, "F1-Score": 0.6486, "ROC-AUC": 0.7906},
+        {"Model Architecture": "XGBoost", "Accuracy": 0.7468, "Precision": 0.6290, "Recall": 0.7091, "F1-Score": 0.6667, "ROC-AUC": 0.7706},
+        {"Model Architecture": "Gradient Boosting", "Accuracy": 0.7338, "Precision": 0.6094, "Recall": 0.7091, "F1-Score": 0.6555, "ROC-AUC": 0.8118}
+    ]
+    
+    results_df = pd.DataFrame(results_data)
+    
+    # ---------------------------------------------------------
+    # DISPLAY STYLED TABLE
+    # ---------------------------------------------------------
+    st.markdown("#### 📊 Live Evaluation Results")
+    
+    styled_df = results_df.style.format({
+        "Accuracy": "{:.4f}",
+        "Precision": "{:.4f}",
+        "Recall": "{:.4f}",
+        "F1-Score": "{:.4f}",
+        "ROC-AUC": "{:.4f}"
+    }).highlight_max(
+        subset=['Recall'], 
+        color='#d1fae5', 
+        axis=0
+    )
+    
+    st.dataframe(
+        styled_df, 
+        use_container_width=True,
+        hide_index=True
+    )
+    
+    # ============================================
 # AGGREGATED FEATURE IMPORTANCE (SHAP)
 # ============================================
 
@@ -811,370 +1178,3 @@ st.markdown("""
     </p>
 </div>
 """, unsafe_allow_html=True)
-
-# ============================================
-# THRESHOLD EXPLANATION & CLINICAL JUSTIFICATION
-# ============================================
-st.markdown("""
-<style>
-/* Main Container */
-.threshold-container {
-    background: rgba(255, 255, 255, 0.65);
-    backdrop-filter: blur(16px);
-    border: 1px solid rgba(226, 232, 240, 0.8);
-    border-radius: 16px;
-    padding: 2rem;
-    margin: 2rem 0;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.03);
-}
-
-/* Header Styling */
-.threshold-header {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 1.5rem;
-}
-.threshold-icon {
-    background: #f59e0b;
-    color: white;
-    width: 36px;
-    height: 36px;
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.1rem;
-    box-shadow: 0 4px 10px rgba(245, 158, 11, 0.3);
-}
-
-/* Responsive Grid for Content */
-.threshold-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
-    margin-bottom: 1.5rem;
-}
-
-/* Individual Info Cards */
-.info-card {
-    background: rgba(255, 255, 255, 0.8);
-    border-radius: 12px;
-    padding: 1.5rem;
-    border: 1px solid #e2e8f0;
-    transition: transform 0.2s ease;
-}
-.info-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.04);
-}
-
-.info-title {
-    font-size: 1.05rem;
-    font-weight: 800;
-    color: #0f172a;
-    margin-bottom: 10px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.info-text {
-    font-size: 0.9rem;
-    line-height: 1.6;
-    color: #475569;
-    margin: 0;
-}
-
-.highlight-badge {
-    background: #fee2e2;
-    color: #b91c1c;
-    padding: 2px 6px;
-    border-radius: 6px;
-    font-weight: 700;
-    font-size: 0.8rem;
-}
-
-.proposed-highlight {
-    background: #e0e7ff;
-    color: #4f46e5;
-    padding: 2px 6px;
-    border-radius: 6px;
-    font-weight: 700;
-    font-size: 0.8rem;
-}
-
-/* References Section */
-.references-section {
-    border-top: 1px solid #e2e8f0;
-    padding-top: 1.2rem;
-    margin-top: 1rem;
-}
-.ref-title {
-    font-size: 0.85rem;
-    font-weight: 800;
-    color: #64748b;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    margin-bottom: 8px;
-}
-.ref-list {
-    font-size: 0.75rem;
-    color: #94a3b8;
-    line-height: 1.5;
-    margin: 0;
-    padding-left: 1.2rem;
-}
-.ref-list li { margin-bottom: 6px; }
-
-/* Mobile Responsiveness */
-@media (max-width: 768px) {
-    .threshold-grid { grid-template-columns: 1fr; }
-    .threshold-container { padding: 1.25rem; }
-}
-</style>
-
-<div class="threshold-container">
-<div class="threshold-header">
-<div class="threshold-icon">⚖️</div>
-<h3 style="margin: 0; color: #0f172a; font-weight: 800; font-size: 1.4rem; letter-spacing: -0.5px;">Decision Threshold Tuning</h3>
-</div>
-<div class="threshold-grid">
-<div class="info-card">
-<div class="info-title">📊 The Baseline Default (0.50)</div>
-<p class="info-text">
-The baseline models in this study use the standard default classification threshold of <span class="highlight-badge">0.50 (50%)</span>. 
-While standard, this predefined cut-off point is widely considered suboptimal for imbalanced medical datasets. 
-Relying purely on a 0.50 threshold often fails to detect enough positive cases in imbalanced classification tasks, 
-missing patients who actually require medical attention.
-</p>
-</div>
-<div class="info-card" style="border: 1px solid rgba(99, 102, 241, 0.4); background: linear-gradient(180deg, rgba(255,255,255,0.9) 0%, rgba(238,242,255,0.5) 100%);">
-<div class="info-title" style="color: #4f46e5;">⭐ Our Proposed Strategy</div>
-<p class="info-text">
-To catch more <i>True Positives</i>, we dynamically lowered the threshold. However, doing so naturally increases <i>False Positives</i>. 
-To balance this, our proposed model scanned threshold limits from <span class="proposed-highlight">0.25 to 0.49</span> to 
-<b>maximize Recall</b> while enforcing a strict <b>Precision constraint of ≥ 35%</b>. 
-<br><br>
-This 35% constraint is clinically motivated by the <b>ADA 2022 screening guidelines</b>, which show that standard screening definitions yield minimum precisions between 17.2% and 50.5%.
-</p>
-</div>
-</div>
-<div class="references-section">
-<div class="ref-title">Academic & Clinical References</div>
-<ul class="ref-list">
-<li><b>Standard Thresholds:</b> "Post-hoc tuning the cut-off point of decision function," Scikit-learn. <a href="https://scikit-learn.org/stable/auto_examples/model_selection/plot_tuned_decision_threshold.html" target="_blank" style="color: #64748b;">[Link]</a></li>
-<li><b>Imbalanced Data & False Positives:</b> American Chemical Society, "GHOST: Adjusting the decision threshold to handle imbalanced data in machine learning," ACS Publications, 2021, doi: 10.1021/acs.jcim.1c00160.</li>
-<li><b>ADA 2022 Precision-Recall Context:</b> M. K. Ali et al., "Impact of changes in diabetes screening guidelines on testing eligibility and potential yield among adults without diagnosed diabetes in the United States," <i>Diabetes Research and Clinical Practice</i>, vol. 197, p. 110572, Mar. 2023, doi: 10.1016/j.diabres.2023.110572.</li>
-</ul>
-</div>
-</div>
-""", unsafe_allow_html=True)
-
-
-# ============================================
-# CLEAN HEADER FOR DIAGNOSTIC PROFILE
-# ============================================
-st.markdown("""
-<div style="background: rgba(255, 255, 255, 0.65); backdrop-filter: blur(16px); padding: 1.25rem; border-radius: 16px; border: 1px solid rgba(255, 255, 255, 0.9); margin-bottom: 2rem; box-shadow: 0 8px 30px rgba(0,0,0,0.03); position: relative; z-index: 10;">
-    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 8px;">
-        <div style="background: #4f46e5; color: white; width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; box-shadow: 0 4px 10px rgba(79,70,229,0.3);">📋</div>
-        <h3 style="margin: 0; color: #0f172a; font-weight: 800; font-size: 1.4rem; letter-spacing: -0.5px;">Patient Diagnostic Profile</h3>
-    </div>
-    <p style="margin: 0; color: #475569; font-size: 0.9rem; line-height: 1.5;">Please enter the patient's medical details below. Tap the <b>(?)</b> icon next to each field to understand the clinical context and risk factors.</p>
-</div>
-""", unsafe_allow_html=True)
-
-# ============================================
-# INPUT FIELDS (2-COLUMN GRID WITH REFS)
-# ============================================
-col1, col2 = st.columns(2, gap="medium")
-
-with col1:
-    pregnancies = st.text_input(
-        "🤰 Pregnancies", 
-        placeholder="e.g., 2",
-        help="What to input:\nNumber of times the patient has been pregnant (Enter 0 if male or never pregnant).\n\nWhy it's a factor:\nPregnancy causes hormonal changes that can lead to temporary insulin resistance (Gestational Diabetes). This increases the chances of getting Type 2 Diabetes later in life."
-    )
-    st.markdown('<div class="ref-pill"><span style="color: #059669;">🟢 Normal: 0–2</span><span style="color: #e11d48;">🔴 Risk: ≥ 3</span></div>', unsafe_allow_html=True)
-
-    glucose = st.text_input(
-        "🩸 Plasma Glucose (mg/dL)", 
-        placeholder="e.g., 120",
-        help="What to input:\nBlood sugar level from a Fasting Glucose or 2-hour Oral Glucose Tolerance Test (in mg/dL).\n\nWhy it's a factor:\nThis is the main indicator of diabetes. High blood sugar means the body isn't making enough insulin or isn't using it properly."
-    )
-    st.markdown('<div class="ref-pill"><span style="color: #059669;">🟢 Normal: 70–139</span><span style="color: #e11d48;">🔴 Risk: ≥ 140</span></div>', unsafe_allow_html=True)
-
-    blood_pressure = st.text_input(
-        "❤️ Blood Pressure (mm Hg)", 
-        placeholder="e.g., 72",
-        help="What to input:\nDiastolic Blood Pressure, which is the lower number in your blood pressure reading (in mm Hg).\n\nWhy it's a factor:\nHigh blood pressure and diabetes are closely related. High BP damages blood vessels and makes insulin resistance worse."
-    )
-    st.markdown('<div class="ref-pill"><span style="color: #059669;">🟢 Normal: 60–80</span><span style="color: #e11d48;">🔴 Risk: ≥ 90</span></div>', unsafe_allow_html=True)
-
-    skin_thickness = st.text_input(
-        "📏 Skin Thickness (mm)", 
-        placeholder="e.g., 20",
-        help="What to input:\nTriceps skin fold thickness measured using a caliper tool (in mm).\n\nWhy it's a factor:\nThis is used to estimate body fat. Having too much body fat is directly linked to insulin resistance and poor blood sugar control."
-    )
-    st.markdown('<div class="ref-pill"><span style="color: #059669;">🟢 Normal: 10–20</span><span style="color: #e11d48;">🔴 Risk: > 25</span></div>', unsafe_allow_html=True)
-
-with col2:
-    insulin = st.text_input(
-        "💉 Serum Insulin (μU/mL)", 
-        placeholder="e.g., 85",
-        help="What to input:\n2-Hour Serum Insulin level after consuming glucose (in μU/mL).\n\nWhy it's a factor:\nVery high insulin levels show that the body is working extra hard because the cells are ignoring the insulin. This is known as Insulin Resistance."
-    )
-    st.markdown('<div class="ref-pill"><span style="color: #059669;">🟢 Normal: 16–166</span><span style="color: #e11d48;">🔴 Risk: > 166</span></div>', unsafe_allow_html=True)
-
-    bmi = st.text_input(
-        "⚖️ BMI Index (kg/m²)", 
-        placeholder="e.g., 25.5",
-        help="What to input:\nBody Mass Index, which is your weight in kilograms divided by your height in meters squared.\n\nWhy it's a factor:\nExcess body weight makes it harder for the body to use insulin properly, causing sugar to build up in the blood instead of going into the cells."
-    )
-    st.markdown('<div class="ref-pill"><span style="color: #059669;">🟢 Normal: 18.5–24.9</span><span style="color: #e11d48;">🔴 Risk: ≥ 25.0</span></div>', unsafe_allow_html=True)
-
-    dpf = st.text_input(
-        "🧬 Diabetes Pedigree *", 
-        placeholder="e.g., 0.35",
-        help="What to input:\n[REQUIRED] A genetic score based on your family's history of diabetes (usually ranges from 0.08 to 2.42).\n\nWhy it's a factor:\nDiabetes is strongly connected to genetics. Having parents or close relatives with diabetes significantly increases your own genetic risk."
-    )
-    st.markdown('<div class="ref-pill"><span style="color: #059669;">🟢 Normal: < 0.50</span><span style="color: #e11d48;">🔴 Risk: ≥ 0.50</span></div>', unsafe_allow_html=True)
-
-    age = st.text_input(
-        "🎂 Age (Years) *", 
-        placeholder="e.g., 35",
-        help="What to input:\n[REQUIRED] The patient's current age in years.\n\nWhy it's a factor:\nAs we get older, our pancreas naturally produces less insulin and we tend to become less physically active, both of which increase the risk of diabetes."
-    )
-    st.markdown('<div class="ref-pill"><span style="color: #059669;">🟢 Normal: < 35 yrs</span><span style="color: #e11d48;">🔴 Risk: ≥ 35 yrs</span></div>', unsafe_allow_html=True)
-
-submitted = st.button("🔍 Analyze Sample Across Models", type="primary", use_container_width=True)
-
-# ============================================
-# RESULTS PROCESSOR
-# ============================================
-if submitted:
-    if not dpf or not age:
-        st.error("⚠️ **Missing Input:** Please provide the Diabetes Pedigree Function and Age.")
-        st.stop() 
-
-    try:
-        input_values = {
-            'Pregnancies': int(pregnancies) if pregnancies else 0,
-            'Glucose': float(glucose) if glucose else 0.0,
-            'BloodPressure': float(blood_pressure) if blood_pressure else 0.0,
-            'SkinThickness': float(skin_thickness) if skin_thickness else 0.0,
-            'Insulin': float(insulin) if insulin else 0.0,
-            'BMI': float(bmi) if bmi else 0.0,
-            'DiabetesPedigreeFunction': float(dpf),
-            'Age': int(age)
-        }
-        input_df = pd.DataFrame([input_values])
-
-        st.markdown("<h3 style='text-align: center; color: #0f172a; margin: 3rem 0 0rem; font-weight: 800; letter-spacing: -0.5px; position: relative; z-index: 10;'>📊 Diagnostic Report & Models</h3>", unsafe_allow_html=True)
-        
-        with st.spinner("🔬 Running advanced prediction models..."):
-            results_html = "<div class='results-wrapper'><div class='results-grid'>"
-            
-            # Predict using Proposed Model
-            proposed_pred = get_proposed_predictor()
-            p_val, p_conf = proposed_pred.predict(input_df)
-            p_thr = int(round(proposed_pred.threshold * 100, 0))
-            results_html += create_result_card("Stacking Ensemble Model", p_val, p_conf, p_thr, is_proposed=True)
-            
-            # Predict using Baseline Models
-            for model_name in BASELINE_MODELS.keys():
-                base_pred = get_baseline_predictor(model_name)
-                b_val, b_conf = base_pred.predict(input_df)
-                b_thr = int(round(base_pred.threshold * 100, 0))
-                results_html += create_result_card(model_name, b_val, b_conf, b_thr, is_proposed=False)
-                
-            results_html += "</div></div>"
-            
-            st.markdown(results_html, unsafe_allow_html=True)
-
-    except Exception as e:
-        st.error(f"⚠️ Error Processing Inputs: {e}")
-
-        # ==========================================
-# LIVE MODEL EVALUATION SYSTEM
-# ==========================================
-
-st.markdown("""
-<div style="margin-top: 1.5rem; margin-bottom: 1rem;">
-    <div style="display: flex; align-items: center; gap: 10px;">
-        <span style="font-size: 1.5rem;">🧪</span>
-        <h3 style="margin: 0; color: #0f172a; font-weight: 700; font-size: 1.35rem;">Live Model Evaluation</h3>
-    </div>
-    <p style="color: #475569; font-size: 0.95rem; margin-top: 4px; margin-bottom: 0;">
-        Run the test dataset through saved models to verify performance metrics in real-time.
-    </p>
-</div>
-""", unsafe_allow_html=True)
-
-if st.button("▶️ Run Data Processing & Evaluation", use_container_width=True, type="primary"):
-    
-    status_text = st.empty()
-    progress_bar = st.progress(0)
-    
-    # ---------------------------------------------------------
-    # SIMULATED PIPELINE STEPS
-    # ---------------------------------------------------------
-    status_text.info("🔄 **Step 1/3:** Loading pre-processed test datasets...")
-    time.sleep(0.4)
-    progress_bar.progress(33)
-    
-    status_text.info("⚙️ **Step 2/3:** Applying optimal decision threshold...")
-    time.sleep(0.4)
-    progress_bar.progress(66)
-    
-    status_text.info("📊 **Step 3/3:** Evaluating performance metrics across all architectures...")
-    time.sleep(0.4)
-    progress_bar.progress(100)
-    
-    # Clean up status indicators after completion
-    time.sleep(0.2)
-    status_text.empty()
-    progress_bar.empty()
-    
-    st.success("✅ **Evaluation Complete!** All metrics calculated successfully.")
-    
-    # ---------------------------------------------------------
-    # PRE-DEFINED COLAB BENCHMARK RESULTS
-    # ---------------------------------------------------------
-    results_data = [
-        {"Model Architecture": "Stacking Ensemble (Calibrated) PROPOSED", "Accuracy": 0.7273, "Precision": 0.5732, "Recall": 0.8704, "F1-Score": 0.6912, "ROC-AUC": 0.8169},
-        {"Model Architecture": "Logistic Regression", "Accuracy": 0.7662, "Precision": 0.6792, "Recall": 0.6545, "F1-Score": 0.6667, "ROC-AUC": 0.8197},
-        {"Model Architecture": "Random Forest", "Accuracy": 0.7597, "Precision": 0.6607, "Recall": 0.6727, "F1-Score": 0.6667, "ROC-AUC": 0.8399},
-        {"Model Architecture": "Naive Bayes", "Accuracy": 0.7532, "Precision": 0.6441, "Recall": 0.6909, "F1-Score": 0.6667, "ROC-AUC": 0.8307},
-        {"Model Architecture": "Support Vector Machine", "Accuracy": 0.7532, "Precision": 0.6809, "Recall": 0.5818, "F1-Score": 0.6275, "ROC-AUC": 0.8082},
-        {"Model Architecture": "LightGBM", "Accuracy": 0.7532, "Precision": 0.6269, "Recall": 0.7636, "F1-Score": 0.6885, "ROC-AUC": 0.7897},
-        {"Model Architecture": "K-Nearest Neighbors", "Accuracy": 0.7468, "Precision": 0.6429, "Recall": 0.6545, "F1-Score": 0.6486, "ROC-AUC": 0.7906},
-        {"Model Architecture": "XGBoost", "Accuracy": 0.7468, "Precision": 0.6290, "Recall": 0.7091, "F1-Score": 0.6667, "ROC-AUC": 0.7706},
-        {"Model Architecture": "Gradient Boosting", "Accuracy": 0.7338, "Precision": 0.6094, "Recall": 0.7091, "F1-Score": 0.6555, "ROC-AUC": 0.8118}
-    ]
-    
-    results_df = pd.DataFrame(results_data)
-    
-    # ---------------------------------------------------------
-    # DISPLAY STYLED TABLE
-    # ---------------------------------------------------------
-    st.markdown("#### 📊 Live Evaluation Results")
-    
-    styled_df = results_df.style.format({
-        "Accuracy": "{:.4f}",
-        "Precision": "{:.4f}",
-        "Recall": "{:.4f}",
-        "F1-Score": "{:.4f}",
-        "ROC-AUC": "{:.4f}"
-    }).highlight_max(
-        subset=['Recall'], 
-        color='#d1fae5', 
-        axis=0
-    )
-    
-    st.dataframe(
-        styled_df, 
-        use_container_width=True,
-        hide_index=True
-    )
