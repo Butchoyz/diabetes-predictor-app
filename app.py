@@ -666,6 +666,152 @@ st.markdown("""
     </p>
 </div>
 """, unsafe_allow_html=True)
+
+# ============================================
+# MODEL PROBABILITY CALIBRATION (SIGMOID)
+# ============================================
+
+# Global Custom Styling for Pure Black Text & Modern Cards
+st.markdown("""
+<style>
+    /* Force Image Caption to Pure Black */
+    [data-testid="stImageCaption"] {
+        color: #000000 !important;
+        font-weight: 600 !important;
+        font-size: 0.88rem !important;
+    }
+
+    .card-box {
+        background-color: #ffffff;
+        border-radius: 12px;
+        padding: 1.5rem;
+        border: 1px solid #e2e8f0;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .card-ece        { border-top: 5px solid #059669; }
+    .card-alignment  { border-top: 5px solid #2563eb; }
+    .card-clinical   { border-top: 5px solid #d97706; }
+
+    .card-title {
+        color: #000000 !important;
+        font-weight: 800;
+        font-size: 1.1rem;
+        margin-bottom: 4px;
+    }
+
+    .card-subtitle {
+        color: #000000 !important;
+        font-weight: 700;
+        font-size: 0.95rem;
+        margin-bottom: 12px;
+    }
+
+    .card-body {
+        color: #000000 !important;
+        font-size: 0.9rem;
+        line-height: 1.6;
+        margin: 0;
+        text-align: left;
+    }
+
+    .banner-box {
+        background-color: #f0fdf4;
+        border: 1px solid #bbf7d0;
+        border-left: 5px solid #16a34a;
+        padding: 1.25rem;
+        border-radius: 8px;
+        margin-top: 1.5rem;
+    }
+
+    .banner-text {
+        color: #000000 !important;
+        font-size: 0.95rem;
+        line-height: 1.6;
+        margin: 0;
+    }
+</style>
+""", unsafe_allow_html=True)
+
+# ---------------------------------------------------------
+# HEADER SECTION
+# ---------------------------------------------------------
+st.markdown('<h3 style="color: #000000; font-weight: 800; margin-bottom: 0;">🎯 Model Probability Calibration (Sigmoid Method)</h3>', unsafe_allow_html=True)
+st.markdown('<p style="color: #000000; font-size: 0.95rem; margin-top: 4px; margin-bottom: 20px;">Evaluating the trustworthiness and accuracy of predicted probability outputs after applying Platt scaling (Sigmoid Calibration).</p>', unsafe_allow_html=True)
+
+image_path = "diabetes (3).png"
+
+# ---------------------------------------------------------
+# 1. HERO IMAGE CONTAINER
+# ---------------------------------------------------------
+with st.container():
+    if os.path.exists(image_path):
+        st.image(
+            image_path, 
+            caption="Figure: Calibration Curve After Sigmoid Calibration (Expected Calibration Error = 0.056)", 
+            use_container_width=True
+        )
+    else:
+        st.warning(f"⚠️ **Image File Missing:** `'{image_path}'`")
+        st.info("Please place `diabetes (3).png` inside your project directory.")
+
+st.write("")
+st.divider()
+
+# ---------------------------------------------------------
+# 2. RESPONSIVE INSIGHTS GRID
+# ---------------------------------------------------------
+st.markdown('<h4 style="color: #000000; font-weight: 800; margin-bottom: 1rem;">💡 Calibration Curve Analysis</h4>', unsafe_allow_html=True)
+
+col_ece, col_align, col_reliability = st.columns(3, gap="medium")
+
+with col_ece:
+    st.markdown("""
+    <div class="card-box card-ece">
+        <div class="card-title">📉 Low Calibration Error</div>
+        <div class="card-subtitle">ECE = 0.056 (5.6%)</div>
+        <p class="card-body">
+            An Expected Calibration Error of only 5.6% shows a minimal gap between predicted probabilities and actual positive rates, proving high mathematical precision.
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
+
+with col_align:
+    st.markdown("""
+    <div class="card-box card-alignment">
+        <div class="card-title">📈 Diagonal Alignment</div>
+        <div class="card-subtitle">Tracks "Perfect" Reference Line</div>
+        <p class="card-body">
+            The green line closely follows the black dashed diagonal line, confirming that the model avoids overconfidence (false high risk) and underconfidence (false low risk).
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
+
+with col_reliability:
+    st.markdown("""
+    <div class="card-box card-clinical">
+        <div class="card-title">🏥 Realistic Risk Output</div>
+        <div class="card-subtitle">Dependable Probability Scores</div>
+        <p class="card-body">
+            When the calibrated ensemble outputs a 70% risk score, approximately 70 out of 100 actual patients in that group have diabetes, making predictions clinically actionable.
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
+
+# ---------------------------------------------------------
+# 3. CLINICAL SUMMARY BANNER
+# ---------------------------------------------------------
+st.markdown("""
+<div class="banner-box">
+    <p class="banner-text">
+        💡 <strong>Key Calibration Takeaway:</strong> Raw machine learning outputs often produce overconfident probabilities. Applying <strong>Sigmoid Calibration</strong> aligns the model's confidence scores with real-world disease incidence, ensuring doctors can trust the exact risk percentage displayed by the app.
+    </p>
+</div>
+""", unsafe_allow_html=True)
+
 # ============================================
 # THRESHOLD EXPLANATION & CLINICAL JUSTIFICATION
 # ============================================
