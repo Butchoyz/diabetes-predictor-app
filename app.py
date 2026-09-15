@@ -283,20 +283,64 @@ submitted = st.button("🔍 Analyze Sample Across Models", type="primary", use_c
 # RESULTS PROCESSOR
 # ============================================
 if submitted:
+    # 1. Required Fields Check
     if not dpf or not age:
         st.error("⚠️ **Missing Input:** Please provide the Diabetes Pedigree Function and Age.")
         st.stop() 
 
     try:
+        # Convert string inputs to numeric types
+        p_val = int(pregnancies) if pregnancies else 0
+        g_val = float(glucose) if glucose else 0.0
+        bp_val = float(blood_pressure) if blood_pressure else 0.0
+        st_val = float(skin_thickness) if skin_thickness else 0.0
+        ins_val = float(insulin) if insulin else 0.0
+        bmi_val = float(bmi) if bmi else 0.0
+        dpf_val = float(dpf)
+        age_val = int(age)
+
+        # 2. Input Validation Logic
+        errors = []
+
+        # Check for negative values
+        input_dict = {
+            "Pregnancies": p_val,
+            "Glucose": g_val,
+            "Blood Pressure": bp_val,
+            "Skin Thickness": st_val,
+            "Insulin": ins_val,
+            "BMI": bmi_val,
+            "Diabetes Pedigree Function": dpf_val,
+            "Age": age_val
+        }
+        
+        negative_fields = [field for field, val in input_dict.items() if val < 0]
+        if negative_fields:
+            errors.append(f"Negative numbers are not allowed for: **{', '.join(negative_fields)}**.")
+
+        # Check upper limits
+        if bmi_val > 185.0:
+            errors.append("BMI value cannot exceed **185 kg/m²**.")
+
+        if age_val > 122:
+            errors.append("Age cannot exceed **122 years**.")
+
+        # Display all errors if present and stop execution
+        if errors:
+            for err in errors:
+                st.error(f"⚠️ **Invalid Input:** {err}")
+            st.stop()
+
+        # Build DataFrame if validation passes
         input_values = {
-            'Pregnancies': int(pregnancies) if pregnancies else 0,
-            'Glucose': float(glucose) if glucose else 0.0,
-            'BloodPressure': float(blood_pressure) if blood_pressure else 0.0,
-            'SkinThickness': float(skin_thickness) if skin_thickness else 0.0,
-            'Insulin': float(insulin) if insulin else 0.0,
-            'BMI': float(bmi) if bmi else 0.0,
-            'DiabetesPedigreeFunction': float(dpf),
-            'Age': int(age)
+            'Pregnancies': p_val,
+            'Glucose': g_val,
+            'BloodPressure': bp_val,
+            'SkinThickness': st_val,
+            'Insulin': ins_val,
+            'BMI': bmi_val,
+            'DiabetesPedigreeFunction': dpf_val,
+            'Age': age_val
         }
         input_df = pd.DataFrame([input_values])
 
@@ -307,9 +351,9 @@ if submitted:
             
             # Predict using Proposed Model
             proposed_pred = get_proposed_predictor()
-            p_val, p_conf = proposed_pred.predict(input_df)
+            p_val_res, p_conf = proposed_pred.predict(input_df)
             p_thr = int(round(proposed_pred.threshold * 100, 0))
-            results_html += create_result_card("Stacking Ensemble Model", p_val, p_conf, p_thr, is_proposed=True)
+            results_html += create_result_card("Stacking Ensemble Model", p_val_res, p_conf, p_thr, is_proposed=True)
             
             # Predict using Baseline Models
             for model_name in BASELINE_MODELS.keys():
@@ -322,6 +366,9 @@ if submitted:
             
             st.markdown(results_html, unsafe_allow_html=True)
 
+    except ValueError:
+        st.error("⚠️ **Invalid Input:** Please enter valid numbers only.")
+        st.stop()
     except Exception as e:
         st.error(f"⚠️ Error Processing Inputs: {e}")
 
