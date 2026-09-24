@@ -200,22 +200,172 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-
 # ============================================
 # CLEAN HEADER FOR DIAGNOSTIC PROFILE
 # ============================================
 st.markdown("""
 <div style="background: rgba(255, 255, 255, 0.65); backdrop-filter: blur(16px); padding: 1.25rem; border-radius: 16px; border: 1px solid rgba(255, 255, 255, 0.9); margin-bottom: 2rem; box-shadow: 0 8px 30px rgba(0,0,0,0.03); position: relative; z-index: 10;">
-    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 8px;">
-        <div style="background: #4f46e5; color: white; width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; box-shadow: 0 4px 10px rgba(79,70,229,0.3);">📋</div>
-        <h3 style="margin: 0; color: #0f172a; font-weight: 800; font-size: 1.4rem; letter-spacing: -0.5px;">Patient Diagnostic Profile</h3>
-    </div>
-    <p style="margin: 0; color: #475569; font-size: 0.9rem; line-height: 1.5;">Please enter the patient's medical details below. Tap the <b>(?)</b> icon next to each field to understand the clinical context and risk factors.</p>
+<div style="display: flex; align-items: center; gap: 12px; margin-bottom: 8px;">
+<div style="background: #4f46e5; color: white; width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; box-shadow: 0 4px 10px rgba(79,70,229,0.3);">📋</div>
+<h3 style="margin: 0; color: #0f172a; font-weight: 800; font-size: 1.4rem; letter-spacing: -0.5px;">Patient Diagnostic Profile</h3>
+</div>
+<p style="margin: 0; color: #475569; font-size: 0.9rem; line-height: 1.5;">Please enter the patient's medical details below. Tap the <b>(?)</b> icon next to each field to understand the clinical context and risk factors.</p>
 </div>
 """, unsafe_allow_html=True)
 
 # ============================================
-# INPUT FIELDS (2-COLUMN GRID WITH REFS)
+# DATA PROCESSING NOTE (MEDIAN IMPUTATION)
+# ============================================
+st.markdown("""
+<div style="background: rgba(240, 249, 255, 0.85); backdrop-filter: blur(12px); padding: 1.5rem; border-radius: 16px; border: 1px solid rgba(186, 230, 253, 0.9); margin-bottom: 2rem; box-shadow: 0 8px 30px rgba(0, 0, 0, 0.04); position: relative; z-index: 10; font-family: 'Plus Jakarta Sans', sans-serif;">
+
+<!-- Header Section -->
+<div style="display: flex; gap: 14px; align-items: flex-start; margin-bottom: 1.25rem;">
+<div style="background: #0284c7; color: white; min-width: 38px; height: 38px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; box-shadow: 0 4px 10px rgba(2, 132, 199, 0.3);">
+💡
+</div>
+<div style="width: 100%;">
+<h4 style="margin: 0 0 6px 0; color: #075985; font-weight: 800; font-size: 1.1rem; letter-spacing: -0.3px;">Handling Missing Patient Data</h4>
+<p style="margin: 0; color: #0c4a6e; font-size: 0.85rem; line-height: 1.6; font-weight: 500;">
+If you leave the <b>Glucose, Blood Pressure, Skin Thickness, Insulin, or BMI</b> fields empty (or zero), the system will automatically apply the pre-calculated median values below to process the prediction.
+</p>
+<!-- Warning Banner -->
+<div style="background: #fffbeb; border-left: 4px solid #f59e0b; padding: 10px 12px; border-radius: 6px; margin-top: 12px;">
+<span style="color: #92400e; font-size: 0.85rem; font-weight: 700; display: flex; align-items: center; gap: 6px;">
+<span>⚠️</span> Note: For the most accurate and reliable prediction results, it is highly recommended to provide actual patient data for all fields.
+</span>
+</div>
+</div>
+</div>
+
+<!-- Metrics Grid -->
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px;">
+
+<!-- Glucose -->
+<div style="background: #ffffff; border-radius: 10px; padding: 12px 16px; border: 1px solid #e0f2fe; box-shadow: 0 2px 8px rgba(0,0,0,0.02); transition: transform 0.2s ease;">
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+<span style="font-weight: 800; color: #0f172a; font-size: 0.95rem; display: flex; align-items: center; gap: 6px;">
+<span style="color: #10b981; font-size: 1.1rem;">✅</span> Glucose
+</span>
+<span style="background: #f0f9ff; color: #0284c7; padding: 4px 10px; border-radius: 6px; font-weight: 800; font-size: 0.8rem; border: 1px solid #bae6fd;">
+Median: 117.00
+</span>
+</div>
+<div style="font-size: 0.8rem; color: #475569; display: flex; flex-direction: column; gap: 6px;">
+<div style="display: flex; justify-content: space-between; align-items: center; background: #f8fafc; padding: 4px 8px; border-radius: 4px;">
+<span>Train imputed:</span> <b>4 zeros</b>
+</div>
+<div style="display: flex; justify-content: space-between; align-items: center; background: #f8fafc; padding: 4px 8px; border-radius: 4px;">
+<span>Test imputed:</span> 
+<span style="display: flex; align-items: center; gap: 6px;">
+<b>1 zeros</b>
+<span style="color: #059669; font-weight: 700; font-size: 0.7rem; background: #d1fae5; padding: 2px 6px; border-radius: 4px;">✓ TRAIN median</span>
+</span>
+</div>
+</div>
+</div>
+
+<!-- BloodPressure -->
+<div style="background: #ffffff; border-radius: 10px; padding: 12px 16px; border: 1px solid #e0f2fe; box-shadow: 0 2px 8px rgba(0,0,0,0.02); transition: transform 0.2s ease;">
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+<span style="font-weight: 800; color: #0f172a; font-size: 0.95rem; display: flex; align-items: center; gap: 6px;">
+<span style="color: #10b981; font-size: 1.1rem;">✅</span> BloodPressure
+</span>
+<span style="background: #f0f9ff; color: #0284c7; padding: 4px 10px; border-radius: 6px; font-weight: 800; font-size: 0.8rem; border: 1px solid #bae6fd;">
+Median: 72.00
+</span>
+</div>
+<div style="font-size: 0.8rem; color: #475569; display: flex; flex-direction: column; gap: 6px;">
+<div style="display: flex; justify-content: space-between; align-items: center; background: #f8fafc; padding: 4px 8px; border-radius: 4px;">
+<span>Train imputed:</span> <b>23 zeros</b>
+</div>
+<div style="display: flex; justify-content: space-between; align-items: center; background: #f8fafc; padding: 4px 8px; border-radius: 4px;">
+<span>Test imputed:</span> 
+<span style="display: flex; align-items: center; gap: 6px;">
+<b>12 zeros</b>
+<span style="color: #059669; font-weight: 700; font-size: 0.7rem; background: #d1fae5; padding: 2px 6px; border-radius: 4px;">✓ TRAIN median</span>
+</span>
+</div>
+</div>
+</div>
+
+<!-- SkinThickness -->
+<div style="background: #ffffff; border-radius: 10px; padding: 12px 16px; border: 1px solid #e0f2fe; box-shadow: 0 2px 8px rgba(0,0,0,0.02); transition: transform 0.2s ease;">
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+<span style="font-weight: 800; color: #0f172a; font-size: 0.95rem; display: flex; align-items: center; gap: 6px;">
+<span style="color: #10b981; font-size: 1.1rem;">✅</span> SkinThickness
+</span>
+<span style="background: #f0f9ff; color: #0284c7; padding: 4px 10px; border-radius: 6px; font-weight: 800; font-size: 0.8rem; border: 1px solid #bae6fd;">
+Median: 29.00
+</span>
+</div>
+<div style="font-size: 0.8rem; color: #475569; display: flex; flex-direction: column; gap: 6px;">
+<div style="display: flex; justify-content: space-between; align-items: center; background: #f8fafc; padding: 4px 8px; border-radius: 4px;">
+<span>Train imputed:</span> <b>175 zeros</b>
+</div>
+<div style="display: flex; justify-content: space-between; align-items: center; background: #f8fafc; padding: 4px 8px; border-radius: 4px;">
+<span>Test imputed:</span> 
+<span style="display: flex; align-items: center; gap: 6px;">
+<b>52 zeros</b>
+<span style="color: #059669; font-weight: 700; font-size: 0.7rem; background: #d1fae5; padding: 2px 6px; border-radius: 4px;">✓ TRAIN median</span>
+</span>
+</div>
+</div>
+</div>
+
+<!-- Insulin -->
+<div style="background: #ffffff; border-radius: 10px; padding: 12px 16px; border: 1px solid #e0f2fe; box-shadow: 0 2px 8px rgba(0,0,0,0.02); transition: transform 0.2s ease;">
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+<span style="font-weight: 800; color: #0f172a; font-size: 0.95rem; display: flex; align-items: center; gap: 6px;">
+<span style="color: #10b981; font-size: 1.1rem;">✅</span> Insulin
+</span>
+<span style="background: #f0f9ff; color: #0284c7; padding: 4px 10px; border-radius: 6px; font-weight: 800; font-size: 0.8rem; border: 1px solid #bae6fd;">
+Median: 125.00
+</span>
+</div>
+<div style="font-size: 0.8rem; color: #475569; display: flex; flex-direction: column; gap: 6px;">
+<div style="display: flex; justify-content: space-between; align-items: center; background: #f8fafc; padding: 4px 8px; border-radius: 4px;">
+<span>Train imputed:</span> <b>290 zeros</b>
+</div>
+<div style="display: flex; justify-content: space-between; align-items: center; background: #f8fafc; padding: 4px 8px; border-radius: 4px;">
+<span>Test imputed:</span> 
+<span style="display: flex; align-items: center; gap: 6px;">
+<b>84 zeros</b>
+<span style="color: #059669; font-weight: 700; font-size: 0.7rem; background: #d1fae5; padding: 2px 6px; border-radius: 4px;">✓ TRAIN median</span>
+</span>
+</div>
+</div>
+</div>
+
+<!-- BMI -->
+<div style="background: #ffffff; border-radius: 10px; padding: 12px 16px; border: 1px solid #e0f2fe; box-shadow: 0 2px 8px rgba(0,0,0,0.02); transition: transform 0.2s ease;">
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+<span style="font-weight: 800; color: #0f172a; font-size: 0.95rem; display: flex; align-items: center; gap: 6px;">
+<span style="color: #10b981; font-size: 1.1rem;">✅</span> BMI
+</span>
+<span style="background: #f0f9ff; color: #0284c7; padding: 4px 10px; border-radius: 6px; font-weight: 800; font-size: 0.8rem; border: 1px solid #bae6fd;">
+Median: 32.40
+</span>
+</div>
+<div style="font-size: 0.8rem; color: #475569; display: flex; flex-direction: column; gap: 6px;">
+<div style="display: flex; justify-content: space-between; align-items: center; background: #f8fafc; padding: 4px 8px; border-radius: 4px;">
+<span>Train imputed:</span> <b>9 zeros</b>
+</div>
+<div style="display: flex; justify-content: space-between; align-items: center; background: #f8fafc; padding: 4px 8px; border-radius: 4px;">
+<span>Test imputed:</span> 
+<span style="display: flex; align-items: center; gap: 6px;">
+<b>2 zeros</b>
+<span style="color: #059669; font-weight: 700; font-size: 0.7rem; background: #d1fae5; padding: 2px 6px; border-radius: 4px;">✓ TRAIN median</span>
+</span>
+</div>
+</div>
+</div>
+
+</div>
+</div>
+""", unsafe_allow_html=True)
+# ============================================
+# INPUT FIELDS (2-COLUMN GRID WITH REFS & LINKS)
 # ============================================
 col1, col2 = st.columns(2, gap="medium")
 
@@ -223,59 +373,57 @@ with col1:
     pregnancies = st.text_input(
         "🤰 Pregnancies", 
         placeholder="e.g., 2",
-        help="What to input:\nNumber of times the patient has been pregnant (Enter 0 if male or never pregnant).\n\nWhy it's a factor:\nPregnancy causes hormonal changes that can lead to temporary insulin resistance (Gestational Diabetes). This increases the chances of getting Type 2 Diabetes later in life."
+        help="What to input:\nNumber of times the patient has been pregnant (Enter 0 if male or never pregnant).\n\nWhy it's a factor:\nPregnancy causes hormonal changes that can lead to temporary insulin resistance (Gestational Diabetes). This increases the chances of getting Type 2 Diabetes later in life.\n\n🔗 [Source: Pub Med Central](https://pmc.ncbi.nlm.nih.gov/articles/PMC7153959/)"
     )
     st.markdown('<div class="ref-pill"><span style="color: #059669;">🟢 Normal: 0–2</span><span style="color: #e11d48;">🔴 Risk: ≥ 3</span></div>', unsafe_allow_html=True)
 
     glucose = st.text_input(
         "🩸 Plasma Glucose (mg/dL)", 
         placeholder="e.g., 120",
-        help="What to input:\nBlood sugar level from a Fasting Glucose or 2-hour Oral Glucose Tolerance Test (in mg/dL).\n\nWhy it's a factor:\nThis is the main indicator of diabetes. High blood sugar means the body isn't making enough insulin or isn't using it properly."
+        help="What to input:\nBlood sugar level from a 2-hour Oral Glucose Tolerance Test (in mg/dL).\n\nWhy it's a factor:\nThis is the main indicator of diabetes. High blood sugar means the body isn't making enough insulin or isn't using it properly.\n\n🔗 [Source: American Diabetes Association (ADA) - Diagnosis](https://diabetes.org/about-diabetes/diagnosis)"
     )
     st.markdown('<div class="ref-pill"><span style="color: #059669;">🟢 Normal: 70–139</span><span style="color: #e11d48;">🔴 Risk: ≥ 140</span></div>', unsafe_allow_html=True)
 
     blood_pressure = st.text_input(
         "❤️ Blood Pressure (mm Hg)", 
         placeholder="e.g., 72",
-        help="What to input:\nDiastolic Blood Pressure, which is the lower number in your blood pressure reading (in mm Hg).\n\nWhy it's a factor:\nHigh blood pressure and diabetes are closely related. High BP damages blood vessels and makes insulin resistance worse."
+        help="What to input:\nDiastolic Blood Pressure, which is the lower number in your blood pressure reading (in mm Hg).\n\nWhy it's a factor:\nHigh blood pressure and diabetes are closely related. High BP damages blood vessels and makes insulin resistance worse.\n\n🔗 [Source: American Heart Association (AHA) - Blood Pressure Levels](https://www.heart.org/en/health-topics/high-blood-pressure/understanding-blood-pressure-readings)"
     )
-    st.markdown('<div class="ref-pill"><span style="color: #059669;">🟢 Normal: 60–80</span><span style="color: #e11d48;">🔴 Risk: ≥ 90</span></div>', unsafe_allow_html=True)
+    st.markdown('<div class="ref-pill"><span style="color: #059669;">🟢 Normal: 60–79</span><span style="color: #e11d48;">🔴 Risk: ≥ 80</span></div>', unsafe_allow_html=True)
 
     skin_thickness = st.text_input(
         "📏 Skin Thickness (mm)", 
         placeholder="e.g., 20",
-        help="What to input:\nTriceps skin fold thickness measured using a caliper tool (in mm).\n\nWhy it's a factor:\nThis is used to estimate body fat. Having too much body fat is directly linked to insulin resistance and poor blood sugar control."
+        help="What to input:\nTriceps skin fold thickness measured using a caliper tool (in mm).\n\nWhy it's a factor:\nThis is used to estimate body fat. Having too much body fat is directly linked to insulin resistance and poor blood sugar control.\n\n🔗 [Source: The Free Dictionary](https://medical-dictionary.thefreedictionary.com/triceps+skin-fold+thickness)"
     )
-    st.markdown('<div class="ref-pill"><span style="color: #059669;">🟢 Normal: 10–20</span><span style="color: #e11d48;">🔴 Risk: > 25</span></div>', unsafe_allow_html=True)
+    st.markdown('<div class="ref-pill"><span style="color: #059669;">🟢 Normal: 12–23</span><span style="color: #e11d48;">🔴 Risk: > 24</span></div>', unsafe_allow_html=True)
 
 with col2:
     insulin = st.text_input(
         "💉 Serum Insulin (μU/mL)", 
         placeholder="e.g., 85",
-        help="What to input:\n2-Hour Serum Insulin level after consuming glucose (in μU/mL).\n\nWhy it's a factor:\nVery high insulin levels show that the body is working extra hard because the cells are ignoring the insulin. This is known as Insulin Resistance."
+        help="What to input:\n2-Hour Serum Insulin level after consuming glucose (in μU/mL).\n\nWhy it's a factor:\nVery high insulin levels show that the body is working extra hard because the cells are ignoring the insulin. This is known as Insulin Resistance.\n\n🔗 [Source: Red cliffe labs](https://redcliffelabs.com/myhealth/lab-test/insulin-pp-test-reports-whats-the-normal-range-and-what-your-results-mean/)"
     )
     st.markdown('<div class="ref-pill"><span style="color: #059669;">🟢 Normal: 16–166</span><span style="color: #e11d48;">🔴 Risk: > 166</span></div>', unsafe_allow_html=True)
 
     bmi = st.text_input(
         "⚖️ BMI Index (kg/m²)", 
         placeholder="e.g., 25.5",
-        help="What to input:\nBody Mass Index, which is your weight in kilograms divided by your height in meters squared.\n\nWhy it's a factor:\nExcess body weight makes it harder for the body to use insulin properly, causing sugar to build up in the blood instead of going into the cells."
+        help="What to input:\nBody Mass Index, which is your weight in kilograms divided by your height in meters squared.\n\nWhy it's a factor:\nExcess body weight makes it harder for the body to use insulin properly, causing sugar to build up in the blood instead of going into the cells.\n\n🔗 [Source: WHO - BMI Classifications](https://www.who.int/news-room/fact-sheets/detail/obesity-and-overweight)"
     )
     st.markdown('<div class="ref-pill"><span style="color: #059669;">🟢 Normal: 18.5–24.9</span><span style="color: #e11d48;">🔴 Risk: ≥ 25.0</span></div>', unsafe_allow_html=True)
 
     dpf = st.text_input(
         "🧬 Diabetes Pedigree *", 
         placeholder="e.g., 0.35",
-        help="What to input:\n[REQUIRED] A genetic score based on your family's history of diabetes (usually ranges from 0.08 to 2.42).\n\nWhy it's a factor:\nDiabetes is strongly connected to genetics. Having parents or close relatives with diabetes significantly increases your own genetic risk."
-    )
-    st.markdown('<div class="ref-pill"><span style="color: #059669;">🟢 Normal: < 0.50</span><span style="color: #e11d48;">🔴 Risk: ≥ 0.50</span></div>', unsafe_allow_html=True)
+        help="What to input:\n[REQUIRED] A genetic score based on your family's history of diabetes (usually ranges from 0.08 to 2.42).\n\nWhy it's a factor:\nDiabetes is strongly connected to genetics. Having parents or close relatives with diabetes significantly increases your own genetic risk.\n\n🔗 [Source: Diabetes Detection: Predicting Type II Diabetes with Machine Learning Algorithm](https://dl.acm.org/doi/10.1145/3733006.3733009)")
+    st.markdown('<div class="ref-pill"><span style="color: #059669;">🟢 Normal: < 0.59</span><span style="color: #e11d48;">🔴 Risk: ≥ 0.60</span></div>', unsafe_allow_html=True)
 
     age = st.text_input(
         "🎂 Age (Years) *", 
         placeholder="e.g., 35",
-        help="What to input:\n[REQUIRED] The patient's current age in years.\n\nWhy it's a factor:\nAs we get older, our pancreas naturally produces less insulin and we tend to become less physically active, both of which increase the risk of diabetes."
-    )
-    st.markdown('<div class="ref-pill"><span style="color: #059669;">🟢 Normal: < 35 yrs</span><span style="color: #e11d48;">🔴 Risk: ≥ 35 yrs</span></div>', unsafe_allow_html=True)
+        help="What to input:\n[REQUIRED] The patient's current age in years.\n\nWhy it's a factor:\nAs we get older, our pancreas naturally produces less insulin and we tend to become less physically active, both of which increase the risk of diabetes.\n\n🔗 [Source: Medical News Today](https://www.medicalnewstoday.com/articles/317375)")
+    st.markdown('<div class="ref-pill"><span style="color: #e11d48;">🔴 Risk:  46-64 yrs</span></div>', unsafe_allow_html=True)
 
 submitted = st.button("🔍 Analyze Sample Across Models", type="primary", use_container_width=True)
 
