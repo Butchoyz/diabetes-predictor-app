@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 from predictor import get_proposed_predictor, get_baseline_predictor, create_result_card, BASELINE_MODELS
+from shap_analysis import render_shap_section
 import joblib
 import time
 import os
@@ -513,6 +514,9 @@ if submitted:
             results_html += "</div></div>"
             
             st.markdown(results_html, unsafe_allow_html=True)
+
+        # SHAP explanation of every model's prediction (runs after the cards are on screen)
+        render_shap_section(input_df)
 
     except ValueError:
         st.error("⚠️ **Invalid Input:** Please enter valid numbers only.")
@@ -1372,4 +1376,4 @@ st.markdown("""
         💡 <strong>Key Calibration Takeaway:</strong> Raw machine learning outputs often produce overconfident probabilities. Applying <strong>Sigmoid Calibration</strong> aligns the model's confidence scores with real-world disease incidence, ensuring doctors can trust the exact risk percentage displayed by the app.
     </p>
 </div>
-""", unsafe_allow_html=True)
+""", unsafe_allow_html=True)

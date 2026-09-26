@@ -28,33 +28,37 @@ class BasePredictor(ABC):
         if self.scaler_path:
             self.scaler = joblib.load(self.scaler_path)
 
+    def impute(self, df: pd.DataFrame) -> pd.DataFrame:
+        """Replace zeros (missing readings) with the saved training medians."""
+        df = df.copy()
+        for col, median_val in self.medians.items():
+            df[col] = df[col].replace(0, np.nan).fillna(median_val)
+        return df
+
     @abstractmethod
     def preprocess(self, df: pd.DataFrame) -> pd.DataFrame:
         pass
 
-    def predict(self, df: pd.DataFrame):
+    def predict_proba_batch(self, df: pd.DataFrame) -> np.ndarray:
+        """P(diabetic) for every row in df. Also used by SHAP to explain the model."""
         processed_df = self.preprocess(df.copy())
         if hasattr(self.model, "predict_proba"):
-            probability = self.model.predict_proba(processed_df)[0, 1]
-        else:
-            probability = float(self.model.predict(processed_df)[0])
-            
+            return self.model.predict_proba(processed_df)[:, 1]
+        return self.model.predict(processed_df).astype(float)
+
+    def predict(self, df: pd.DataFrame):
+        probability = float(self.predict_proba_batch(df)[0])
         prediction = int(probability >= self.threshold)
         confidence = int(round(probability * 100, 0))
         return prediction, confidence
 
 class ProposedPredictor(BasePredictor):
     def preprocess(self, df: pd.DataFrame) -> pd.DataFrame:
-        for col, median_val in self.medians.items():
-            df[col] = df[col].replace(0, np.nan)
-            df[col].fillna(median_val, inplace=True)
-        return df
+        return self.impute(df)
 
 class BaselinePredictor(BasePredictor):
     def preprocess(self, df: pd.DataFrame) -> pd.DataFrame:
-        for col, median_val in self.medians.items():
-            df[col] = df[col].replace(0, np.nan)
-            df[col].fillna(median_val, inplace=True)
+        df = self.impute(df)
         if self.scaler:
             scaled_data = self.scaler.transform(df)
             df = pd.DataFrame(scaled_data, columns=df.columns)
@@ -152,4 +156,4 @@ def create_result_card(model_name, prediction, confidence, threshold, is_propose
 </span>
 </div>
 </div>
-</div>"""
+</div>"""
