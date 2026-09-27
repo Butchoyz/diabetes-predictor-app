@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 from predictor import get_proposed_predictor, get_baseline_predictor, create_result_card, BASELINE_MODELS
-from shap_analysis import render_shap_section
+from shap_analysis import render_shap_section, render_base_risk_section
 import joblib
 import time
 import os
@@ -942,7 +942,12 @@ if st.button("▶️ Run Data Processing & Evaluation", use_container_width=True
         use_container_width=True,
         hide_index=True
     )
-    
+
+# ============================================
+# BASE RISK PER MODEL (SHAP REFERENCE POINT)
+# ============================================
+render_base_risk_section()
+
     # ============================================
 # AGGREGATED FEATURE IMPORTANCE (SHAP)
 # ============================================
