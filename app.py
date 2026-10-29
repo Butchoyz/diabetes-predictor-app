@@ -26,7 +26,8 @@ st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
 
-* { font-family: 'Plus Jakarta Sans', sans-serif !important; }
+/* App font everywhere except formulas (KaTeX) and Streamlit's icon fonts, which need their own */
+*:not(.katex):not(.katex *):not([data-testid*="Icon"]) { font-family: 'Plus Jakarta Sans', sans-serif !important; }
 [data-testid="stSidebar"] { display: none !important; }
 
 /* Base Canvas */
@@ -1039,6 +1040,27 @@ with st.container():
         st.warning(f"⚠️ **Image File Missing:** `'{image_path}'`")
         st.info(f"Please place `{image_path}` inside your project directory.")
 
+st.markdown("""
+<div class="metrics-wrapper" style="margin: 1rem 0 0.5rem;">
+    <table class="metrics-table">
+        <thead>
+            <tr><th>Rank</th><th>Feature</th><th>Mean |SHAP| (average across base models)</th><th>Std. deviation</th></tr>
+        </thead>
+        <tbody>
+            <tr><td>1</td><td>Glucose</td><td>0.4538</td><td>0.3801</td></tr>
+            <tr><td>2</td><td>BMI</td><td>0.2597</td><td>0.2563</td></tr>
+            <tr><td>3</td><td>Age</td><td>0.1647</td><td>0.1514</td></tr>
+            <tr><td>4</td><td>Diabetes Pedigree Function</td><td>0.1172</td><td>0.1318</td></tr>
+            <tr><td>5</td><td>Insulin</td><td>0.0708</td><td>0.0425</td></tr>
+            <tr><td>6</td><td>Blood Pressure</td><td>0.0504</td><td>0.0427</td></tr>
+            <tr><td>7</td><td>Skin Thickness</td><td>0.0392</td><td>0.0294</td></tr>
+            <tr><td>8</td><td>Pregnancies</td><td>0.0307</td><td>0.0267</td></tr>
+        </tbody>
+    </table>
+</div>
+<p style="color: #475569; font-size: 0.8rem; line-height: 1.5; margin: 0 0 1rem;">Values from the thesis notebook: the mean |SHAP| of each feature for the Stacking Ensemble's 7 base learners over 100 test patients, averaged across the learners. Tree models were explained with TreeExplainer and the others with KernelExplainer, so the units differ between learners. For the current patient's own explanation, see <i>Why These Predictions?</i> above.</p>
+""", unsafe_allow_html=True)
+
 st.write("")
 st.divider()
 
@@ -1183,6 +1205,26 @@ with st.container():
     else:
         st.warning(f"⚠️ **Image File Missing:** `'{image_path}'`")
         st.info("Please place `diabetes (2).png` inside your project directory.")
+
+st.markdown("""
+<div class="metrics-wrapper" style="margin: 1rem 0 0.5rem;">
+    <table class="metrics-table">
+        <thead>
+            <tr><th>Rank</th><th>Base Learner (Meta-Learner Input)</th><th>Mean |SHAP| on the Meta-Learner</th></tr>
+        </thead>
+        <tbody>
+            <tr><td>1</td><td>LightGBM (base_lgb)</td><td>0.1077</td></tr>
+            <tr><td>2</td><td>Gradient Boosting (base_gbm)</td><td>0.0789</td></tr>
+            <tr><td>3</td><td>XGBoost (base_xgb)</td><td>0.0522</td></tr>
+            <tr><td>4</td><td>Random Forest (base_rf)</td><td>0.0238</td></tr>
+            <tr><td>5</td><td>K-Nearest Neighbors (base_knn)</td><td>0.0236</td></tr>
+            <tr><td>6</td><td>Support Vector Machine (base_svm)</td><td>0.0088</td></tr>
+            <tr><td>7</td><td>Naive Bayes (base_nb)</td><td>0.0007</td></tr>
+        </tbody>
+    </table>
+</div>
+<p style="color: #475569; font-size: 0.8rem; line-height: 1.5; margin: 0 0 1rem;">Values from the thesis notebook: the meta-learner's mean |SHAP| for each base learner over 100 test patients (KernelExplainer, 50 background samples), computed on the uncalibrated stacking model refit on the full training set. For how the meta-learner combined the base learners for the current patient, see <i>Inside the Stacking Ensemble</i> above.</p>
+""", unsafe_allow_html=True)
 
 st.write("")
 st.divider()
